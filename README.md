@@ -1,16 +1,11 @@
 # Renaissance
 
-:video_game: Game manager for HungerStruck.
+This is a 1.11.2 fork based on the origin Renaissance. The code here is very unpolished, and not very well done. If you see some code you think could be written better please don't say it's bad, I know it is, make a pull request. 
 
+Building Renaissance no longer requires Strukkit, but Strukkit features have been removed.
 
-# Open Source Release Notes
+### Building
 
-This is the source code for the former HungerStruck game plugin. It will likely be difficult to successfuly run the plugin in its current state, but feel free to explore the code or use it. You can reach out to us through the issue tracker if you have any questions, but note that it is unlikely you will receive support on launching it. 
+Before building, have a 1.11.2_R1 Craftbukkit jar placed into a folder call `lib` in the root directory. 
 
-## Compiling
-
-To compile, you need Strukkit 1.8 in your local repository.
-```
-$ git clone git@github.com:kblanks/Strukkit && cd Strukkit
-$ ./build.sh
-```
+Once the Craftbukkit jar is placed, use `mvn clean package` to build Renaissance. 
