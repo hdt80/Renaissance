@@ -69,19 +69,16 @@ class LiquidMetal {
         }
 
         private fun isNewWord(string: String, index: Int) = if (index == 0) false else string[index - 1] == ' ' || string[index - 1] == '\t'
-        private fun isUpperCase(string: String, index: Int) = 'A' <= string[index] && string[index] <= 'Z'
+        private fun isUpperCase(string: String, index: Int) = string[index] in 'A'..'Z'
 
         fun score(string: String, abbreviation: String): Double {
-            if (abbreviation.length == 0) return SCORE_TRAILING
+            if (abbreviation.isEmpty()) return SCORE_TRAILING
             if (abbreviation.length > string.length) return SCORE_NO_MATCH
 
             // complete miss:
             val scores = buildScoreArray(string, abbreviation) ?: return 0.0
 
-            var sum = 0.0
-            for (score in scores) {
-                sum += score
-            }
+            val sum = scores.sum()
 
             return (sum / scores.size)
         }

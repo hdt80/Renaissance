@@ -6,9 +6,7 @@ import org.bukkit.configuration.file.YamlConfiguration
 import java.io.File
 
 /**
- * Bukkit config ftw.
- *
- * Created by molenzwiebel on 22-12-15.
+ * Maps all the paths in the config to specific variables
  */
 object RConfig {
     val configFile: File = File("plugins/Renaissance/config.yml")
@@ -20,9 +18,14 @@ object RConfig {
     }
 
     object Maps {
-        var mapDir: String by path("maps.dir", "maps")
+        var mapDir: String by path("maps.map-dir", "maps")
         var mapFileName: String by path("maps.map-file", "Map.class")
         var worldPrefix: String by path("maps.world-prefix", "match-")
+    }
+
+    object GVents {
+        var gventDir: String by path("gvents.gvent-dir", "events")
+        var gventFileName: String by path("gvents.gvent-file", "GVent.class")
     }
 
     object Lobby {
@@ -44,6 +47,9 @@ object RConfig {
 
         var tickMessage: String by path("match.start-countdown.message", "${ChatColor.YELLOW}The game will begin in ${ChatColor.GOLD}%s ${ChatColor.YELLOW}second(s).")
         var countdownTime: Int by path("match.start-countdown.time", 20)
+
+        var endMessage: String by path("match.end-countdown.message", "${ChatColor.YELLOW}Returning to the lobby in ${ChatColor.GOLD}%s ${ChatColor.YELLOW}second(s).")
+        var endCountdownTime: Int by path("match.end-countdown.time", 20)
 
         var feastTime: Int by path("match.feast.time", 300)
         var feastRarityIncrease: Double by path("match.feast.rarity-increase", 0.15)

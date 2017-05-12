@@ -1,7 +1,6 @@
-package net.hungerstruck.renaissance.xml.builder
+package net.hungerstruck.renaissance.gvent
 
 import net.hungerstruck.renaissance.xml.module.RModule
-import java.util.*
 
 /**
  * Represents a property that is "settable" via the builder.
@@ -16,7 +15,7 @@ data class BuildableProperty<out T>(
  * Type parameter X should be the class itself, as in class Foo : AbstractMapBuilder<Foo>, so we can return ourselves.
  */
 @Suppress("UNCHECKED_CAST")
-abstract class AbstractMapBuilder<X : AbstractMapBuilder<X>> {
+abstract class AbstractGVentBuilder<X : AbstractGVentBuilder<X>> {
     val properties: MutableList<BuildableProperty<*>> = arrayListOf()
 
     protected inline fun <reified T : RModule> register(prop: String, value: Any): X {
@@ -70,3 +69,4 @@ abstract class BuilderPropertySet<T : BuilderPropertySet<T>> {
         return this
     }
 }
+

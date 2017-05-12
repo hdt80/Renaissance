@@ -11,7 +11,7 @@ import java.util.*
  * Created by molenzwiebel on 23-04-16.
  */
 class REventManager {
-    private val forcedSpectators: MutableList<UUID>
+    private var forcedSpectators: MutableList<UUID>
 
     constructor() {
         try {

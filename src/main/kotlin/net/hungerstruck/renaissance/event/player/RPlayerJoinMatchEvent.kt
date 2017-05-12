@@ -5,7 +5,10 @@ import net.hungerstruck.renaissance.match.RMatch
 import org.bukkit.event.HandlerList
 
 /**
- * Created by molenzwiebel on 01-02-16.
+ * Occurs when a RPlayer has joined a match, either in progress or not yet started
+ *
+ * @param player RPlayer that joined the match
+ * @param match RMatch that the player joined
  */
 class RPlayerJoinMatchEvent(player: RPlayer, val match: RMatch) : RPlayerEvent(player) {
 

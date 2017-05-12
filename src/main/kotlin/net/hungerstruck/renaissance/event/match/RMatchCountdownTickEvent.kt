@@ -4,7 +4,10 @@ import net.hungerstruck.renaissance.match.RMatch
 import org.bukkit.event.HandlerList
 
 /**
- * Created by teddy on 30/03/2016.
+ * Event representing a tick of a RMatchCountdown
+ *
+ * @param match RMatch that the RMatchCountdown tick occured
+ * @param timeLeft How many seconds are remaining till the Countdown has finished
  */
 class RMatchCountdownTickEvent(match: RMatch, val timeLeft: Int) : StruckMatchEvent(match) {
 

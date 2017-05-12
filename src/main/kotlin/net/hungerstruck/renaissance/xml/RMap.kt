@@ -6,18 +6,17 @@ import java.io.File
 
 /**
  * Represents a map.
- *
- * Created by molenzwiebel on 20-12-15.
  */
-class RMap {
+class RMap(loc: File) {
+
     var mapBuilder: MapBuilder
-
     var mapInfo: RMapInfo
-    val location: File
 
-    constructor(loc: File) {
-        this.location = loc
+    val location: File = loc
+    val isLobby: Boolean
+        get() = this.mapInfo.lobbyProperties != null
 
+    init {
         this.mapBuilder = this.loadMapBuilder()
         this.mapInfo = loadMapInfo()
     }
@@ -52,4 +51,5 @@ class RMap {
 
         return RMapInfo(name, version, lobby, lobbyProperties, objective, authors, contributors, rules, difficulty, dimension)
     }
+
 }

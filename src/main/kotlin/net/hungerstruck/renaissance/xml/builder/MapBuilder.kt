@@ -1,10 +1,12 @@
 package net.hungerstruck.renaissance.xml.builder
 
+import net.hungerstruck.renaissance.match.RMatch
 import net.hungerstruck.renaissance.modules.*
 import net.hungerstruck.renaissance.modules.region.*
 import net.hungerstruck.renaissance.util.RandomCollection
 import net.hungerstruck.renaissance.xml.Contributor
 import net.hungerstruck.renaissance.xml.RLobbyProperties
+import net.hungerstruck.renaissance.xml.module.RModuleContext
 import org.bukkit.Difficulty
 import org.bukkit.World
 import org.bukkit.inventory.ItemStack
@@ -69,6 +71,30 @@ class MapBuilder : AbstractMapBuilder<MapBuilder>() {
     fun boundary(x: BoundarySettings.() -> Unit)
             = register<BoundaryModule>(BoundarySettings().build(x))
 
+    class SpecCallback(val instance: MapBuilder) : BuilderPropertySet<SpecCallback>() {
+        fun onMatchLoad(f: (RMatch, RModuleContext) -> Unit) {
+            instance.register<SpecCallbackModule>("onMatchLoad", f)
+        }
+
+        fun onMatchStart(f: (RMatch, RModuleContext) -> Unit) {
+            instance.register<SpecCallbackModule>("onMatchStart", f)
+        }
+
+        fun onMatchEnd(f: (RMatch, RModuleContext) -> Unit) {
+            instance.register<SpecCallbackModule>("onMatchEnd", f)
+        }
+
+        fun onMatchCountdownTick(f: (RMatch, RModuleContext) -> Unit) {
+            instance.register<SpecCallbackModule>("onMatchCountdownTick", f)
+        }
+    }
+
+    /**
+     * Specifies region event settings.
+     */
+    fun callbacks(x: SpecCallback.() -> Unit)
+            = register<SpecCallbackModule>(SpecCallback(this).build(x))
+
     class ChestSettings(val instance: MapBuilder) : BuilderPropertySet<ChestSettings>() {
         var mode: ChestModule.Mode = ChestModule.Mode.AUTOMATIC
         var chests: MutableList<BlockRegion> = arrayListOf()
@@ -118,15 +144,28 @@ class MapBuilder : AbstractMapBuilder<MapBuilder>() {
             = register<PedestalModule>("pedestals", BlockRegionListBuilder().run(x))
 
     class SanitySettings : BuilderPropertySet<SanitySettings>() {
+        var enabledCauses = listOf(SanityModule.Cause.HEIGHT, SanityModule.Cause.CAVE, SanityModule.Cause.LIGHT, SanityModule.Cause.RADIUS)
         var airHeight = 0
         var overallLightLevel = 0
     }
+
 
     /**
      * Specifies sanity settings.
      */
     fun sanity(x: SanitySettings.() -> Unit)
             = register<SanityModule>(SanitySettings().build(x))
+
+    class ThirstSettings : BuilderPropertySet<ThirstSettings>() {
+        var enabled = true
+    }
+
+    /**
+     * Specifies thirst settings.
+     */
+    fun thirst(x: ThirstSettings.() -> Unit)
+            = register<ThirstModule>(ThirstSettings().build(x))
+
 
     class TimeLockSettings : BuilderPropertySet<TimeLockSettings>() {
         var locked = false
@@ -136,12 +175,12 @@ class MapBuilder : AbstractMapBuilder<MapBuilder>() {
     class TNTSettings : BuilderPropertySet<TNTSettings>() {
         var blockDamage = false
         var instantIgnite = false
-        var `yield` = -1
+        var yield = -1
         var damageUnderWater = false
     }
 
     /**
-     * Specifies sanity settings.
+     * Specifies tnt settings.
      */
     fun tnt(x: TNTSettings.() -> Unit)
             = register<TNTSettingsModule>(TNTSettings().build(x))

@@ -4,7 +4,10 @@ import net.hungerstruck.renaissance.RPlayer
 import org.bukkit.event.HandlerList
 
 /**
- * Created by teddy on 30/03/2016.
+ * Occurs when a RPlayer's sanity is changed
+ *
+ * @param player RPlayer whose sanity changed
+ * @param sanity New sanity of the player
  */
 class RPlayerSanityUpdateEvent(player: RPlayer, val sanity: Int) : RPlayerEvent(player) {
 

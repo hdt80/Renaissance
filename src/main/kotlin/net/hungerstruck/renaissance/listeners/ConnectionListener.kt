@@ -14,22 +14,13 @@ import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerKickEvent
 import org.bukkit.event.player.PlayerQuitEvent
 
-/**
- * Handles connections. Basically just assigns a player to a lobby or match.
- *
- * Created by molenzwiebel on 01-01-16.
- */
 class ConnectionListener : Listener {
     @EventHandler
-    public fun onPlayerConnect(event: PlayerJoinEvent) {
-        val lobby = Renaissance.lobbyManager.findLobby(RConfig.Lobby.joinStrategy)
+    fun onPlayerConnect(event: PlayerJoinEvent) {
+        // Don't broadcast any join message
         event.joinMessage = null
 
-        if (lobby != null) {
-            lobby.join(event.player.rplayer)
-            return
-        }
-
+        // First try to place the joining place into a running match
         val match = Renaissance.matchManager.findMatch(RConfig.Match.joinStrategy)
         if (match != null) {
             event.player.rplayer.match = match
@@ -37,13 +28,16 @@ class ConnectionListener : Listener {
             return
         }
 
-        event.player.kickPlayer(RConfig.General.noMatchesMessage)
+        // If no match is currently running send them to the lobby
+        Renaissance.lobbyManager.defaultLobby.join(event.player.rplayer)
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
     fun onPlayerQuit(event: PlayerQuitEvent) {
+        // Don't broadcast any quit message
         event.quitMessage = null
 
+        // If they were in a match remove them from it
         if (event.player.rplayer.match != null) {
             val match = event.player.rplayer.match
 
@@ -55,8 +49,10 @@ class ConnectionListener : Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     fun onPlayerKick(event: PlayerKickEvent) {
+        // Don't broadcast any kick message
         event.leaveMessage = null
-        
+
+        // If they were in a match remove them from it
         if (event.player.rplayer.match != null) {
             val match = event.player.rplayer.match
 

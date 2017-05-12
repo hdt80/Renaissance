@@ -1,15 +1,24 @@
 package net.hungerstruck.renaissance.util
 
 import com.google.common.io.Files
+import net.hungerstruck.renaissance.RLogger
 import java.io.File
 import java.io.IOException
 
 /**
  * MapUtils ported to Kotlin.
- *
- * Created by molenzwiebel on 22-12-15.
  */
 object FileUtil {
+
+    /**
+     * Copy a file to another location
+     *
+     * @param source File to be copied from
+     * @param destination File to be copied to. If force is not true this File should not exist
+     * @param force If creation of the destination be forced if destination already exists
+     *
+     * @throws IllegalAccessException If the source doesn't exist, or if destination does exist with the force flag false
+     */
     fun copy(source: File, destination: File, force: Boolean = false) {
         if (!source.exists()) {
             throw IllegalArgumentException("Source (" + source.path + ") doesn't exist.")
@@ -26,6 +35,12 @@ object FileUtil {
         }
     }
 
+    /**
+     * Copy a world folder to a new location
+     *
+     * @param from File where the world exists
+     * @param to Where the world should be copied to
+     */
     fun copyWorldFolder(from: File, to: File) {
         FileUtil.copy(from, to)
         FileUtil.delete(File(to, "session.lock"))
@@ -53,9 +68,15 @@ object FileUtil {
         Files.copy(source, destination)
     }
 
+    /**
+     * Delete a file. If f is a directory each file within the directory will also be deleted
+     *
+     * @param f File to delete
+     */
     fun delete(f: File) {
-        if (!f.exists())
+        if (!f.exists()) {
             return
+        }
 
         if (f.isDirectory) {
             for (c in f.listFiles()!!) {
@@ -63,6 +84,10 @@ object FileUtil {
             }
         }
 
-        f.delete()
+        try {
+            java.nio.file.Files.delete(f.toPath())
+        } catch (e: IOException) {
+            RLogger.error("IOException: ${e.message}")
+        }
     }
 }

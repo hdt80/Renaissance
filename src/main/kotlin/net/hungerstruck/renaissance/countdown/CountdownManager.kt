@@ -1,32 +1,43 @@
 package net.hungerstruck.renaissance.countdown
 
 /**
- * Created by molenzwiebel on 01-01-16.
+ * Manages all the countdowns
  */
 class CountdownManager {
     private val runningCountdowns: MutableList<CountdownWrapper> = arrayListOf()
 
-    public fun start(countdown: Countdown, time: Int) {
+    fun start(countdown: Countdown, time: Int) {
         val wrapper = CountdownWrapper(countdown)
         wrapper.start(time)
         runningCountdowns.add(wrapper)
     }
 
-    public fun cancel(clazz: Class<out Countdown>) {
+    fun cancel(clazz: Class<out Countdown>) {
         runningCountdowns.removeAll {
             if (it.javaClass == clazz) {
                 it.cancel()
                 true
-            } else false
+            } else {
+                false
+            }
         }
     }
 
-    public fun cancelAll() {
+    fun cancelAll() {
         runningCountdowns.removeAll {
             it.cancel()
             true
         }
     }
 
-    public fun hasCountdown(clazz: Class<out Countdown>) = runningCountdowns.filter { it.countdown.javaClass == clazz }.any()
+    fun removeCountdown(cd: Countdown) {
+        for (cdw : CountdownWrapper in runningCountdowns) {
+            if (cdw.countdown == cd) {
+                runningCountdowns.remove(cdw)
+                return
+            }
+        }
+    }
+
+    fun hasCountdown(clazz: Class<out Countdown>) = runningCountdowns.filter { it.countdown.javaClass == clazz }.any()
 }

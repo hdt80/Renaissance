@@ -1,36 +1,37 @@
 package net.hungerstruck.renaissance.match
 
+import net.hungerstruck.renaissance.RLogger
+import net.hungerstruck.renaissance.RPlayer
+import net.hungerstruck.renaissance.Renaissance
 import net.hungerstruck.renaissance.config.RConfig
+import net.hungerstruck.renaissance.rplayer
 import net.hungerstruck.renaissance.util.FileUtil
 import net.hungerstruck.renaissance.xml.RMap
-import net.hungerstruck.renaissance.xml.RMapContext
+import net.minecraft.server.v1_11_R1.WorldServer
 import org.bukkit.Bukkit
 import org.bukkit.World
 import org.bukkit.WorldCreator
-import org.bukkit.generator.ChunkGenerator
+import org.bukkit.craftbukkit.v1_11_R1.CraftWorld
+import org.bukkit.entity.HumanEntity
+import org.bukkit.entity.Player
 import java.io.File
 import java.util.*
 
 /**
- * Manages matches.
- *
- * Created by molenzwiebel on 22-12-15.
+ * Manages matches
  */
-class RMatchManager {
+class RMatchManager() {
     val matches: MutableMap<World, RMatch> = hashMapOf()
-    private val mapContext: RMapContext
 
     private var matchCount: Int = 0
 
-    constructor(mapCtx: RMapContext) {
-        this.mapContext = mapCtx
-    }
-
-    public fun constructMatch(nextMap: RMap): RMatch {
+    fun constructMatch(nextMap: RMap): RMatch {
         val worldName = RConfig.Maps.worldPrefix + ++matchCount
 
         val worldFolder = File(Bukkit.getServer().worldContainer, worldName)
-        if(worldFolder.exists()) worldFolder.deleteRecursively()
+        if (worldFolder.exists()) {
+            worldFolder.deleteRecursively()
+        }
         FileUtil.copyWorldFolder(nextMap.location, worldFolder)
 
         val gen = WorldCreator(worldName).generator(RGenerator()).generateStructures(false).environment(nextMap.mapInfo.dimension)
@@ -41,28 +42,42 @@ class RMatchManager {
         val match = RMatch(matchCount, nextMap, world)
         matches[world] = match
 
-        println("[+] Loaded ${nextMap.mapInfo.friendlyDescription}")
+        RLogger.info("Loaded ${nextMap.mapInfo.friendlyDescription}")
         return match
     }
 
-    public fun unloadMatch(oldMatch: RMatch) {
-        //FIXME: Move this somewhere else, players should be teleported out of the world before this is called.
-        for (participant in oldMatch.players) {
-            participant.match = null
-            participant.previousState?.restore(participant)
-            participant.previousState = null
-        }
+    /**
+     * Unload a match, sending all players in in back to a Lobby and removing the folder for the match
+     *
+     * @param oldMatch Match that will be unloaded
+     */
+    fun unloadMatch(oldMatch: RMatch) {
+        RLogger.debug("Unloading ${oldMatch.map.mapInfo.friendlyDescription}...")
 
         val dir = oldMatch.world.worldFolder
-        Bukkit.unloadWorld(oldMatch.world, true)
-        FileUtil.delete(dir)
         matches.remove(oldMatch.world)
 
-        println("[+] Unloaded ${oldMatch.map.mapInfo.friendlyDescription}")
+        if (oldMatch.world is CraftWorld) {
+            if (oldMatch.world.handle.players.size > 0) {
+                RLogger.warn("${oldMatch.map.mapInfo.name} still has players in it. Forcing a unload")
+
+                for (player in oldMatch.world.players) {
+                    Renaissance.lobbyManager.defaultLobby.join(player.player.rplayer, true)
+                }
+            }
+        }
+
+        if (!Bukkit.unloadWorld(oldMatch.world, false)) {
+            RLogger.error("Failed to unload ${oldMatch.map.mapInfo.name}. unloadWorld() returned false")
+            return
+        }
+        FileUtil.delete(dir)
+
+        RLogger.info("Unloaded ${oldMatch.map.mapInfo.friendlyDescription}")
     }
 
     // Note: May return null if there are no active matches.
-    public fun findMatch(strategy: RConfig.JoinStrategy): RMatch? {
+    fun findMatch(strategy: RConfig.JoinStrategy): RMatch? {
         if (matches.isEmpty()) return null
 
         return when (strategy) {

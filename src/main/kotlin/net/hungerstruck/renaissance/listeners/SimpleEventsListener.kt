@@ -24,30 +24,35 @@ class SimpleEventsListener : Listener {
     }
 
     /**
-     * Returns true if the match exists and is not in PLAYING state
+     * Check if a world has a match existing, and if it does make sure it isn't in the PLAYING state
+     *
+     * @param world World to perform the check on
+     *
+     * @return If the event should be cancelled
      */
     private fun shouldCancel(world: World): Boolean {
-        return Renaissance.matchManager.matches.get(world) != null && Renaissance.matchManager.matches.get(world)!!.state != RMatch.State.PLAYING
+        return Renaissance.matchManager.matches[world] != null &&
+                Renaissance.matchManager.matches[world]!!.state != RMatch.State.PLAYING
     }
 
     @EventHandler
-    public fun onBlockRedstoneEvent(event: BlockRedstoneEvent) {
+    fun onBlockRedstoneEvent(event: BlockRedstoneEvent) {
         if (shouldCancel(event.block.world))
             event.newCurrent = event.oldCurrent
     }
 
     @EventHandler
-    public fun onCreatureSpawn(event: CreatureSpawnEvent) {
+    fun onCreatureSpawn(event: CreatureSpawnEvent) {
         cancelEventIfNotStarted(event, event.entity.world)
     }
 
     @EventHandler
-    public fun onWeatherChange(event: WeatherChangeEvent) {
+    fun onWeatherChange(event: WeatherChangeEvent) {
         cancelEventIfNotStarted(event, event.world)
     }
 
     @EventHandler(priority = EventPriority.LOW)
-    public fun onEntityExplode(event: EntityExplodeEvent) {
+    fun onEntityExplode(event: EntityExplodeEvent) {
         cancelEventIfNotStarted(event, event.location.world)
     }
 
@@ -90,5 +95,4 @@ class SimpleEventsListener : Listener {
     fun onPistonRetract(event: BlockPistonRetractEvent) {
         cancelEventIfNotStarted(event, event.block.world)
     }
-
 }

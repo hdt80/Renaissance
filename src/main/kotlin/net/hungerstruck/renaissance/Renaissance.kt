@@ -2,6 +2,7 @@ package net.hungerstruck.renaissance
 
 import net.hungerstruck.renaissance.config.RConfig
 import net.hungerstruck.renaissance.countdown.CountdownManager
+import net.hungerstruck.renaissance.gvent.GVentContext
 import net.hungerstruck.renaissance.listeners.ConnectionListener
 import net.hungerstruck.renaissance.listeners.LobbyListener
 import net.hungerstruck.renaissance.listeners.SimpleEventsListener
@@ -21,25 +22,17 @@ import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
 import java.io.File
 
-/**
- * Main class.
- *
- * Created by molenzwiebel on 20-12-15.
- */
 object Renaissance {
     var plugin: JavaPlugin? = null
 
     val mapContext: RMapContext = RMapContext()
-    val matchManager: RMatchManager = RMatchManager(mapContext)
-    val lobbyManager: RLobbyManager = RLobbyManager()
+    val gventContext: GVentContext = GVentContext()
+    val matchManager: RMatchManager = RMatchManager()
+    val lobbyManager: RLobbyManager
     val countdownManager: CountdownManager = CountdownManager()
     val eventManager: REventManager = REventManager()
 
-    fun initialize(plugin: JavaPlugin) {
-        this.plugin = plugin
-
-        ActionBarSender.runTaskTimerAsynchronously(plugin, 5, 5)
-
+    init {
         RModuleRegistry.register<ChestModule>()
         RModuleRegistry.register<ChatModule>()
         RModuleRegistry.register<DeathModule>()
@@ -57,14 +50,33 @@ object Renaissance {
         RModuleRegistry.register<BloodModule>()
         RModuleRegistry.register<ChunkLoadModule>()
         RModuleRegistry.register<TNTSettingsModule>()
+        RModuleRegistry.register<SpecCallbackModule>()
 
         mapContext.loadMaps(File(RConfig.Maps.mapDir))
-        mapContext.resolveLobbies()
+        gventContext.loadGVents(File(RConfig.GVents.gventDir))
 
-        if (mapContext.getMaps().size == 0) throw IllegalStateException("Must have at least one map to start loading Renaissance.")
-        if (mapContext.getMaps().filter { it.mapInfo.lobbyProperties != null }.size == 0) throw IllegalStateException("Must have at least one lobby to start loading Renaissance.")
-        if (mapContext.getMaps().filter { it.mapInfo.lobbyProperties == null }.size == 0) throw IllegalStateException("Must have at least one game map to start loading Renaissance.")
-        lobbyManager.createLobbyFor(mapContext.getMaps().first { it.mapInfo.lobbyProperties == null })
+        // Check there are maps loaded
+        if (mapContext.getMaps().size == 0) {
+            throw IllegalStateException("Must have at least one map to start loading Renaissance.")
+        }
+
+        // Check for at least 1 lobby
+        if (mapContext.getMaps().filter { !it.isLobby }.isEmpty()) {
+            throw IllegalStateException("Must have at least one lobby to start loading Renaissance.")
+        }
+
+        // Check for at least 1 map
+        if (mapContext.getMaps().filter { it.isLobby }.isEmpty()) {
+            throw IllegalStateException("Must have at least one game map to start loading Renaissance.")
+        }
+
+        lobbyManager = RLobbyManager(RConfig.Lobby.defaultLobby)
+    }
+
+    fun initialize(plugin: JavaPlugin) {
+        this.plugin = plugin
+
+        ActionBarSender.runTaskTimerAsynchronously(plugin, 5, 5)
 
         Bukkit.getPluginManager().registerEvents(RPlayer.Companion, plugin)
         Bukkit.getPluginManager().registerEvents(LobbyListener(), plugin)
@@ -73,6 +85,4 @@ object Renaissance {
 
         Settings.register()
     }
-
-
 }

@@ -1,12 +1,9 @@
 package net.hungerstruck.renaissance.modules
 
-import net.hungerstruck.renaissance.RPlayer
+import net.hungerstruck.renaissance.*
 import net.hungerstruck.renaissance.config.RConfig
 import net.hungerstruck.renaissance.event.player.RPlayerJoinMatchEvent
-import net.hungerstruck.renaissance.getIgnoreBounds
 import net.hungerstruck.renaissance.match.RMatch
-import net.hungerstruck.renaissance.rplayer
-import net.hungerstruck.renaissance.teleportable
 import net.hungerstruck.renaissance.xml.module.Dependencies
 import net.hungerstruck.renaissance.xml.module.RModule
 import net.hungerstruck.renaissance.xml.module.RModuleContext
@@ -58,7 +55,7 @@ class DeathModule(match: RMatch, modCtx: RModuleContext) : RModule(match, modCtx
 
         event.player.state = RPlayer.State.SPECTATING
         event.player.reset()
-        event.player.collidesWithEntities = false
+        event.player.isCollidable = false
         event.player.allowFlight = true
         event.player.inventory.setItem(0, ItemStack(Material.COMPASS, 1))
         event.player.teleport(match.world.spawnLocation.teleportable)
@@ -74,15 +71,13 @@ class DeathModule(match: RMatch, modCtx: RModuleContext) : RModule(match, modCtx
         val victim = event.entity.rplayer
         victim.state = RPlayer.State.SPECTATING
         victim.reset(false)
-        victim.collidesWithEntities = false
+        victim.isCollidable = false
         victim.allowFlight = true
 
-        //val message = if (victim.killer != null) RConfig.Match.playerDeathByPlayerMessage else RConfig.Match.playerDeathByOtherMessage
-        //match.sendMessage(message.replace("%0\$s", victim.displayName).replace("%1\$c", (victim.killer?.displayName).toString()))
         match.sendMessage(event.deathMessage)
 
         if (match.shouldEnd) {
-            var winner: RPlayer
+            val winner: RPlayer
 
             if (match.alivePlayers.size == 1) {
                 winner = match.alivePlayers[0]
@@ -90,7 +85,7 @@ class DeathModule(match: RMatch, modCtx: RModuleContext) : RModule(match, modCtx
                 winner = victim
             }
 
-            match.announceWinner(winner)
+            match.endMatch(winner)
         } else {
             match.sendMessage(RConfig.Match.playerRemainMessage.replace("%0\$d", match.alivePlayers.size.toString()))
 
@@ -106,7 +101,7 @@ class DeathModule(match: RMatch, modCtx: RModuleContext) : RModule(match, modCtx
     fun onRespawn(event: PlayerRespawnEvent) {
         if (!isSpectator(event.player)) return
 
-        event.respawnLocation = match.world.spawnLocation.teleportable
+        event.respawnLocation = match.world.spawnLocation
         event.player.inventory.setItem(0, ItemStack(Material.COMPASS, 1))
     }
 
@@ -163,13 +158,13 @@ class DeathModule(match: RMatch, modCtx: RModuleContext) : RModule(match, modCtx
         val hp = ItemStack(Material.SPECKLED_MELON, clicked.health.toInt())
         var im = hp.itemMeta
         im.displayName = "${ChatColor.RED}Health"
-        hp.setItemMeta(im)
+        hp.itemMeta = im
         inv.setItem(0, hp)
 
         val hunger = ItemStack(Material.GRILLED_PORK, clicked.foodLevel)
         im = hunger.itemMeta
         im.displayName = "${ChatColor.GREEN}Hunger"
-        hunger.setItemMeta(im)
+        hunger.itemMeta = im
         inv.setItem(1, hunger)
 
         if (clicked.inventory.helmet != null) inv.setItem(5, ItemStack(clicked.inventory.helmet))

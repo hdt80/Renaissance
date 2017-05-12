@@ -70,7 +70,7 @@ class ChestModule(match: RMatch, modCtx: RModuleContext) : RModule(match, modCtx
 
         processedChunks.add(event.chunk)
         for (tEntity in event.chunk.tileEntities) {
-            val loc = BlockRegion(tEntity.location)
+            val loc = BlockRegion(tEntity.location.toVector())
             if (tEntity.type == Material.CHEST || tEntity.type == Material.TRAPPED_CHEST) chests.add(loc)
             if (lastItems != null && !processedChests.contains(loc)) fillChest(lastItems!!, loc)
         }

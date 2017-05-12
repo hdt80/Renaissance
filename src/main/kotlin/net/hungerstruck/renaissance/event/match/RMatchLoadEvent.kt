@@ -4,7 +4,10 @@ import net.hungerstruck.renaissance.match.RMatch
 import org.bukkit.event.HandlerList
 
 /**
- * Created by molenzwiebel on 03-01-16.
+ * Occurs when a RMatch is loaded. This does not mean that a RMatch has started, players are not guaranteed to have
+ *      been loaded into the RMatch yet
+ *
+ * @param match RMatch that was loaded
  */
 class RMatchLoadEvent(match: RMatch) : StruckMatchEvent(match) {
 

@@ -1,8 +1,9 @@
 name: Renaissance
 version: ${version}
 description: ${description}
-authors: [molenzwiebel, Komp, skreem, TeddyTheTeddy]
+author: Hpt
 main: net.hungerstruck.renaissance.RenaissancePlugin
+depends: [WorldEdit]
 
 commands:
    debug:

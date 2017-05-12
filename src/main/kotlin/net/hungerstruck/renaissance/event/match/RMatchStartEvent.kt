@@ -4,7 +4,9 @@ import net.hungerstruck.renaissance.match.RMatch
 import org.bukkit.event.HandlerList
 
 /**
- * Created by molenzwiebel on 01-01-16.
+ * Occurs when a RMatch has started, meaning players can now move around and play
+ *
+ * @param match RMatch that was started
  */
 class RMatchStartEvent(match: RMatch) : StruckMatchEvent(match) {
 

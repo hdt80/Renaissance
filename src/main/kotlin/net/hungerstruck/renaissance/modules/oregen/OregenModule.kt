@@ -1,5 +1,6 @@
 package net.hungerstruck.renaissance.modules.oregen
 
+import net.hungerstruck.renaissance.RLogger
 import net.hungerstruck.renaissance.event.match.RMatchLoadEvent
 import net.hungerstruck.renaissance.match.RMatch
 import net.hungerstruck.renaissance.modules.BoundaryModule
@@ -7,18 +8,16 @@ import net.hungerstruck.renaissance.util.RandomCollection
 import net.hungerstruck.renaissance.xml.module.Dependencies
 import net.hungerstruck.renaissance.xml.module.RModule
 import net.hungerstruck.renaissance.xml.module.RModuleContext
-import net.minecraft.server.v1_8_R3.BlockPosition
-import net.minecraft.server.v1_8_R3.Blocks
-import net.minecraft.server.v1_8_R3.IBlockData
-import net.minecraft.server.v1_8_R3.WorldGenMinable
-import org.bukkit.craftbukkit.v1_8_R3.CraftWorld
+import net.minecraft.server.v1_11_R1.BlockPosition
+import net.minecraft.server.v1_11_R1.Blocks
+import net.minecraft.server.v1_11_R1.IBlockData
+import net.minecraft.server.v1_11_R1.WorldGenMinable
+import org.bukkit.craftbukkit.v1_11_R1.CraftWorld
 import org.bukkit.event.EventHandler
 import java.util.*
 
 /**
  * Handles ore generation.
- *
- * Created by molenzwiebel on 10-01-16.
  */
 @Dependencies(BoundaryModule::class)
 class OregenModule(match: RMatch, modCtx: RModuleContext) : RModule(match, modCtx) {
@@ -41,7 +40,7 @@ class OregenModule(match: RMatch, modCtx: RModuleContext) : RModule(match, modCt
     }
 
     @EventHandler
-    public fun onMatchLoad(event: RMatchLoadEvent) {
+    fun onMatchLoad(event: RMatchLoadEvent) {
         // Generate list of chunks in the world.
         val boundary = getModule<BoundaryModule>()!!.region
 
@@ -52,7 +51,7 @@ class OregenModule(match: RMatch, modCtx: RModuleContext) : RModule(match, modCt
 
         val worldServer = (event.match.world as CraftWorld).handle
 
-        println("Starting ore generation...")
+        RLogger.debug("Starting ore generation...")
         val start = System.currentTimeMillis()
 
         for (x in lowerChunkX..upperChunkX) {
@@ -69,6 +68,6 @@ class OregenModule(match: RMatch, modCtx: RModuleContext) : RModule(match, modCt
             }
         }
 
-        println("Generated ores in ${System.currentTimeMillis() - start} ms!")
+        RLogger.debug("Generated ores in ${System.currentTimeMillis() - start} ms!")
     }
 }

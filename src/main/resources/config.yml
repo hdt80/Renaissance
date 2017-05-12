@@ -7,6 +7,10 @@ maps:
     map-file: "Map.class"
     world-prefix: "match-"
 
+gvents:
+    gvent-dir: "events"
+    gvent-file: "GVent.class"
+
 lobby:
     default-lobby-map: "Lobby"
     join-strategy: "SMALLEST"
@@ -15,13 +19,16 @@ lobby:
     minimum-players: 2
     maximum-players: 24
     start-countdown:
-        message: "§eThe lobby will end in §6%s §esecond(s)."
+        message: "§eThe match will start in §6%s §esecond(s)."
         time: 20
 
 match:
     join-strategy: "SMALLEST"
     start-countdown:
         message: "§eThe games will begin in §6%s §esecond(s)."
+        time: 20
+    end-countdown:
+        message: "§eReturning to the lobby in §6$s §esecond(s)."
         time: 20
     feast:
         time: 300

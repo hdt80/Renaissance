@@ -3,4 +3,7 @@ package net.hungerstruck.renaissance.event
 import org.bukkit.event.Event
 import org.bukkit.event.HandlerList
 
-abstract class StruckEvent : Event() { }
+/**
+ * Abstract class representing any StruckEvent
+ */
+abstract class StruckEvent : Event()

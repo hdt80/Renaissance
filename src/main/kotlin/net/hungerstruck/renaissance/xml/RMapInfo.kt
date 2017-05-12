@@ -1,12 +1,12 @@
 package net.hungerstruck.renaissance.xml
 
 import org.bukkit.Difficulty
+import org.bukkit.Location
 import org.bukkit.World
+import org.bukkit.util.Vector
 
 /**
- * Contains information about a map.
- *
- * Created by molenzwiebel on 20-12-15.
+ * Contains information about the map
  */
 data class RMapInfo(
         val name: String,
@@ -20,13 +20,15 @@ data class RMapInfo(
         val difficulty: Difficulty,
         val dimension: World.Environment) {
 
-    lateinit var lobbyMap: RMap
-
-    public val friendlyDescription: String
+    val friendlyDescription: String
         get() = "$name by ${authors.map { it.name }.joinToString(", ")}"
 }
 
-data class RLobbyProperties(var canBuild: Boolean = false, var canTakeDamage: Boolean = false)
+data class RLobbyProperties(
+        var canBuild: Boolean = false,
+        var canTakeDamage: Boolean = false,
+        var spawnLoc: Vector = Vector(0, 70, 0)
+)
 
 /**
  * Simple contributor data class.

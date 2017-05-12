@@ -19,8 +19,6 @@ import java.util.*
 
 /**
  * Parses pedestals.
- *
- * Created by molenzwiebel on 21-12-15.
  */
 class PedestalModule(match: RMatch, val modCtx: RModuleContext) : RModule(match, modCtx) {
     @inject lateinit var pedestals: List<BlockRegion>
@@ -32,13 +30,13 @@ class PedestalModule(match: RMatch, val modCtx: RModuleContext) : RModule(match,
     }
 
     @EventHandler
-    public fun onPlayerJoinMatch(event: RPlayerJoinMatchEvent) {
+    fun onPlayerJoinMatch(event: RPlayerJoinMatchEvent) {
         if (!isMatch(event.match)) return
         if (match.state != RMatch.State.STARTING || event.player.isForcedSpectator) return
 
         event.player.state = RPlayer.State.PARTICIPATING
         event.player.reset()
-        event.player.teleport(pedestalIt.next().loc.add(0.5, 0.5, 0.5).toLocation(match.world).teleportable)
+        event.player.teleport(pedestalIt.next().loc.add(Vector(0.5, 0.5, 0.5)).toLocation(match.world).teleportable)
 
         val boundaryCenter = modCtx.getModule<BoundaryModule>()?.center
         if(boundaryCenter != null)
@@ -48,17 +46,21 @@ class PedestalModule(match: RMatch, val modCtx: RModuleContext) : RModule(match,
     }
 
     @EventHandler
-    public fun onLobbyEnd(event: RLobbyEndEvent) {
+    fun onLobbyEnd(event: RLobbyEndEvent) {
         match.beginCountdown()
     }
 
     @EventHandler
-    public fun onPlayerMove(event: PlayerMoveEvent) {
-        if (!isMatch(event.player)) return
+    fun onPlayerMove(event: PlayerMoveEvent) {
+        if (!isMatch(event.player)) {
+            return
+        }
 
         if (match.state == RMatch.State.STARTING && event.player.rplayer.state == RPlayer.State.PARTICIPATING) {
-            if (event.to.blockX != event.from.blockX || event.to.blockZ != event.from.blockZ)
+            // Let them move in their little 1 by 1 square
+            if (event.to.blockX != event.from.blockX || event.to.blockZ != event.from.blockZ) {
                 event.to = event.from
+            }
         }
     }
 }

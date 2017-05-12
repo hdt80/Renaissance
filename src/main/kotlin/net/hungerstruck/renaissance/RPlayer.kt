@@ -15,8 +15,6 @@ import org.bukkit.inventory.ItemStack
 
 /**
  * Player object for our needs.
- *
- * Created by molenzwiebel on 20-12-15.
  */
 class RPlayer(val bukkit: Player) : Player by bukkit {
     companion object : Listener {
@@ -70,7 +68,7 @@ class RPlayer(val bukkit: Player) : Player by bukkit {
      */
     inline fun <reified T : Any> getSetting(setting: Setting) = PlayerSettings.getManager(bukkit).getValue(setting, T::class.java)
 
-    public fun reset(resetHealth: Boolean = true) {
+    fun reset(resetHealth: Boolean = true) {
         if (resetHealth) health = 20.0
         saturation = 20.0f
         exhaustion = 20.0f
@@ -86,8 +84,9 @@ class RPlayer(val bukkit: Player) : Player by bukkit {
         allowFlight = false
         actionBarMessage = null
 
-        for (effect in activePotionEffects)
+        for (effect in activePotionEffects) {
             removePotionEffect(effect.type)
+        }
 
         inventory.clear()
         inventory.armorContents = arrayOfNulls<ItemStack>(inventory.armorContents.size)
@@ -105,7 +104,7 @@ class RPlayer(val bukkit: Player) : Player by bukkit {
      *  or
      *  - The game has not started
      */
-    public fun canSee(other: RPlayer): Boolean {
+    fun canSee(other: RPlayer): Boolean {
         return other.match == match && (other.state == State.PARTICIPATING || (other.state == State.SPECTATING && state == State.SPECTATING && getSetting<Boolean>(Settings.SPECTATOR_OPTIONS)!!) || match?.state != RMatch.State.PLAYING)
     }
 

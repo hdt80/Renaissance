@@ -1,24 +1,22 @@
-package net.hungerstruck.renaissance.lobby
+package net.hungerstruck.renaissance.match
 
 import net.hungerstruck.renaissance.Renaissance
 import net.hungerstruck.renaissance.config.RConfig
 import net.hungerstruck.renaissance.countdown.Countdown
 
-/**
- * Lobby end countdown
- */
-class RLobbyEndCountdown(val lobby: RLobby) : Countdown() {
+class RMatchEndCountdown(val match: RMatch) : Countdown() {
     override fun onTick(timeLeft: Int) {
-        val status = RConfig.Lobby.tickMessage.format(timeLeft)
+        val status = RConfig.Match.endMessage.format(timeLeft)
 
         if (timeLeft % 10 == 0 || timeLeft <= 5) {
-            lobby.sendMessage(status)
+            match.sendMessage(status)
         }
     }
 
     override fun onFinish() {
-        lobby.startMatch()
+        match.removeMatch()
 
         Renaissance.countdownManager.removeCountdown(this)
     }
 }
+

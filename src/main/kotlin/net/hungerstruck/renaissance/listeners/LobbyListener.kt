@@ -19,16 +19,18 @@ import org.bukkit.event.player.AsyncPlayerChatEvent
 
 /**
  * As lobbies cannot contain modules (they are designed for matches), this listener handles block breaking, damage, etc.
- *
- * Created by molenzwiebel on 01-01-16.
  */
 class LobbyListener : Listener {
     //FIXME: Maybe cancel interacts (chests etc)?
 
     // Redirect chat to only the lobby.
     @EventHandler
-    public fun onChat(event: AsyncPlayerChatEvent) {
-        if (event.message.startsWith("/")) return // Ignore commands.
+    fun onChat(event: AsyncPlayerChatEvent) {
+        // Ignore commands
+        if (event.message.startsWith("/")) {
+            return
+        }
+
         val lobby = event.player.rplayer.lobby ?: return
 
         lobby.sendPrefixlessMessage(RConfig.Lobby.chatFormat.format(event.player.name, event.message))
@@ -37,13 +39,13 @@ class LobbyListener : Listener {
 
     // Cancel item drops if we don't allow breaking of blocks. Otherwise, go ahead.
     @EventHandler
-    public fun onItemDrop(event: ItemSpawnEvent) {
+    fun onItemDrop(event: ItemSpawnEvent) {
         val lobby = getLobby(event.entity.world) ?: return
         event.isCancelled = !lobby.lobbyMap.mapInfo.lobbyProperties!!.canBuild
     }
 
     @EventHandler
-    public fun onBlockBreak(event: BlockBreakEvent) {
+    fun onBlockBreak(event: BlockBreakEvent) {
         val lobby = getLobby(event.block.world) ?: return
         event.isCancelled = !lobby.lobbyMap.mapInfo.lobbyProperties!!.canBuild
     }
@@ -55,7 +57,7 @@ class LobbyListener : Listener {
     }
 
     @EventHandler
-    public fun onPlayerDamageEvent(event: EntityDamageEvent) {
+    fun onPlayerDamageEvent(event: EntityDamageEvent) {
         if (event.entity !is Player) return // We don't care about non-players
         val lobby = getLobby(event.entity.world) ?: return
 
@@ -77,18 +79,18 @@ class LobbyListener : Listener {
             // Always cancel any non-player damage. Teleport them to spawn if it is void damage.
             event.isCancelled = true
             if (event.cause == EntityDamageEvent.DamageCause.VOID) {
-                event.entity.teleport(event.entity.world.spawnLocation.teleportable)
+                event.entity.teleport(event.entity.world.spawnLocation)
             }
         }
     }
 
     @EventHandler
-    public fun onHungerDrain(event: FoodLevelChangeEvent) {
+    fun onHungerDrain(event: FoodLevelChangeEvent) {
         val lobby = getLobby(event.entity.world) ?: return
         event.isCancelled = true
     }
 
     private fun getLobby(world: World): RLobby? {
-        return Renaissance.lobbyManager.findLobby(world)
+        return Renaissance.lobbyManager.isLobbyWorld(world)
     }
 }

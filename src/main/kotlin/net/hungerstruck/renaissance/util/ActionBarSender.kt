@@ -1,9 +1,9 @@
 package net.hungerstruck.renaissance.util
 
 import net.hungerstruck.renaissance.RPlayer
-import net.minecraft.server.v1_8_R3.IChatBaseComponent
-import net.minecraft.server.v1_8_R3.PacketPlayOutChat
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer
+import net.minecraft.server.v1_11_R1.IChatBaseComponent
+import net.minecraft.server.v1_11_R1.PacketPlayOutChat
+import org.bukkit.craftbukkit.v1_11_R1.entity.CraftPlayer
 import org.bukkit.entity.Player
 import org.bukkit.scheduler.BukkitRunnable
 

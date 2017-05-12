@@ -11,12 +11,12 @@ import net.hungerstruck.renaissance.xml.builder.inject
 import net.hungerstruck.renaissance.xml.module.Dependencies
 import net.hungerstruck.renaissance.xml.module.RModule
 import net.hungerstruck.renaissance.xml.module.RModuleContext
-import net.minecraft.server.v1_8_R3.PacketPlayOutWorldBorder
-import net.minecraft.server.v1_8_R3.WorldBorder
+import net.minecraft.server.v1_11_R1.PacketPlayOutWorldBorder
+import net.minecraft.server.v1_11_R1.WorldBorder
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Material
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer
+import org.bukkit.craftbukkit.v1_11_R1.entity.CraftPlayer
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.PlayerDeathEvent
@@ -27,6 +27,7 @@ import java.util.*
  */
 @Dependencies(BoundaryModule::class)
 class SanityModule(match: RMatch, modCtx: RModuleContext) : RModule(match, modCtx) {
+    @inject val enabledCauses = listOf(Cause.HEIGHT, Cause.CAVE, Cause.LIGHT, Cause.RADIUS)
     @inject val airHeight: Int = 120
     @inject val overallLightLevel: Int = 6
 
@@ -38,6 +39,10 @@ class SanityModule(match: RMatch, modCtx: RModuleContext) : RModule(match, modCt
 
     var radius = 0
     var radiusDecrease = 0
+
+    fun isEnabled() : Boolean {
+        return !enabledCauses.isEmpty()
+    }
 
     enum class Cause(val messages: Map<Int, String>) {
         HEIGHT(mapOf(
@@ -59,7 +64,7 @@ class SanityModule(match: RMatch, modCtx: RModuleContext) : RModule(match, modCt
     }
 
     override fun init() {
-        registerEvents()
+       registerEvents()
     }
 
     @EventHandler
@@ -99,13 +104,13 @@ class SanityModule(match: RMatch, modCtx: RModuleContext) : RModule(match, modCt
             var level = initial
 
             // Air height decrement.
-            if (player.location.y > airHeight) {
+            if (Cause.HEIGHT in enabledCauses && player.location.y > airHeight) {
                 level -= sanityChange
                 cause = Cause.HEIGHT
             }
 
             // Lighting decrement.
-            if (player.location.y < player.world.maxHeight) {
+            if (Cause.LIGHT in enabledCauses && player.location.y < player.world.maxHeight) {
                 val block = player.location.block
                 if (block != null && block.lightLevel < overallLightLevel) {
                     level -= sanityChange
@@ -114,7 +119,7 @@ class SanityModule(match: RMatch, modCtx: RModuleContext) : RModule(match, modCt
             }
 
             // Block decrement.
-            if (player.location.y < player.world.maxHeight) {
+            if (Cause.CAVE in enabledCauses && player.location.y < player.world.maxHeight) {
                 var stone = 0
                 var count = 0
 
@@ -141,7 +146,7 @@ class SanityModule(match: RMatch, modCtx: RModuleContext) : RModule(match, modCt
             // Radius decrement.
             val boundaryMod = getModule<BoundaryModule>()!!
             val isInside = Math.abs(player.location.blockX - boundaryMod.center.blockX) < radius && Math.abs(player.location.blockZ - boundaryMod.center.blockZ) < radius
-            if (!isInside) {
+            if (Cause.RADIUS in enabledCauses && !isInside) {
                 // Do stuff
                 level -= sanityChange
                 cause = Cause.RADIUS

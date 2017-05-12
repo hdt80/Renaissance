@@ -53,7 +53,7 @@ abstract class RModule : Listener {
     /**
      * Called when the module gets unloaded. Can be overwritten by the module.
      */
-    public fun cleanup() {
+    fun cleanup() {
         for (listener in listeners) {
             HandlerList.unregisterAll(listener)
         }

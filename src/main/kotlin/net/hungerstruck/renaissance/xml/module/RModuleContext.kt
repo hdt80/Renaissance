@@ -21,15 +21,15 @@ class RModuleContext {
         }
     }
 
-    public inline fun <reified T : RModule> getModule(): T? {
+    inline fun <reified T : RModule> getModule(): T? {
         return modules.filterIsInstance<T>().firstOrNull()
     }
 
-    public inline fun <reified T : RModule> hasModule(): Boolean {
+    inline fun <reified T : RModule> hasModule(): Boolean {
         return hasModule(T::class)
     }
 
-    public fun hasModule(clazz: KClass<out RModule>): Boolean {
+    fun hasModule(clazz: KClass<out RModule>): Boolean {
         return modules.filterIsInstance(clazz.java).any()
     }
 

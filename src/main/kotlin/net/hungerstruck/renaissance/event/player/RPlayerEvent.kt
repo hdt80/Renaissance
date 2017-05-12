@@ -4,6 +4,8 @@ import net.hungerstruck.renaissance.RPlayer
 import net.hungerstruck.renaissance.event.StruckEvent
 
 /**
- * Created by molenzwiebel on 01-02-16.
+ * Abstract class representing any RPlayerEvent
+ *
+ * @param player RPlayer that triggered the event
  */
 abstract class RPlayerEvent(val player: RPlayer) : StruckEvent()

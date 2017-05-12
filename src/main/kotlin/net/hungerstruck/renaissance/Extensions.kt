@@ -31,7 +31,7 @@ infix fun Double.pow(x: Double): Double {
 }
 
 @Deprecated("Method is disabled right now, rationale: Cave spawns would break, along with anything above regular spawns")
-public val Location.teleportable: Location
+val Location.teleportable: Location
     get() = this
     // get() = world.getHighestBlockAt(this).location.add(0.5, 0.5, 0.5)
 

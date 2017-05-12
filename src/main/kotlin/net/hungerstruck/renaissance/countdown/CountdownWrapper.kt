@@ -4,11 +4,17 @@ import net.hungerstruck.renaissance.Renaissance
 import org.bukkit.scheduler.BukkitRunnable
 
 /**
- * Created by molenzwiebel on 01-01-16.
+ * Acts as a wrapper between a BukkitRunnable and a Countdown
  */
 class CountdownWrapper(val countdown: Countdown) : BukkitRunnable() {
+    // How many seconds are left
     var timeLeft: Int = -1
 
+    /**
+     * Start the Countdown
+     *
+     * @param seconds How many seconds the Countdown should wait for
+     */
     fun start(seconds: Int) {
         assert(seconds > 0, { "Countdown has to have positive time." })
         assert(timeLeft == -1, { "Countdown already started." })
@@ -20,11 +26,17 @@ class CountdownWrapper(val countdown: Countdown) : BukkitRunnable() {
         this.runTaskTimer(Renaissance.plugin, 0, 20)
     }
 
+    /**
+     * Cancel the Countdown by calling the onCancel and cancelling the BukkitRunnable
+     */
     override fun cancel() {
         countdown.onCancel()
         super.cancel()
     }
 
+    /**
+     * Run the BukkitRunnable
+     */
     override fun run() {
         if (timeLeft == 0) {
             countdown.onFinish()

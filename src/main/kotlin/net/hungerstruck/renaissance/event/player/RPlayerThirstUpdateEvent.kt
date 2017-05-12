@@ -4,7 +4,10 @@ import net.hungerstruck.renaissance.RPlayer
 import org.bukkit.event.HandlerList
 
 /**
- * Created by teddy on 30/03/2016.
+ * Occurs when a RPlayer's thirst is changed
+ *
+ * @param player RPlayer whose thirst changed
+ * @param thirst New thirst of the player
  */
 class RPlayerThirstUpdateEvent(player: RPlayer, val thirst: Int) : RPlayerEvent(player) {
 

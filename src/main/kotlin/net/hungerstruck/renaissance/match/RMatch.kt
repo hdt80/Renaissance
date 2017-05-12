@@ -1,6 +1,6 @@
 package net.hungerstruck.renaissance.match
 
-import com.google.common.base.Strings
+import net.hungerstruck.renaissance.RLogger
 import net.hungerstruck.renaissance.RPlayer
 import net.hungerstruck.renaissance.Renaissance
 import net.hungerstruck.renaissance.commands.CommandUtils
@@ -14,60 +14,49 @@ import net.hungerstruck.renaissance.xml.module.RModuleContext
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.World
-import org.bukkit.util.ChatPaginator
 
 /**
- * Represents a match.
- *
- * Created by molenzwiebel on 20-12-15.
+ * Represents a match
  */
-class RMatch {
-    val id: Int
-    val map: RMap
-    val world: World
+class RMatch(val id: Int, val map: RMap, val world: World) {
+
     var state: State = State.LOADED
 
-    val moduleContext: RModuleContext
+    val moduleContext: RModuleContext = RModuleContext(this)
 
     val players: List<RPlayer>
-        get() = RPlayer.getPlayers() { it.match == this }
+        get() = RPlayer.getPlayers { it.match == this }
 
     val alivePlayers: List<RPlayer>
-        get() = RPlayer.getPlayers() { it.match == this && it.state == RPlayer.State.PARTICIPATING }
+        get() = RPlayer.getPlayers { it.match == this && it.state == RPlayer.State.PARTICIPATING }
 
     val shouldEnd: Boolean
         get() = alivePlayers.size <= 1
 
-    constructor(id: Int, map: RMap, world: World) {
-        this.id = id
-        this.map = map
-        this.world = world
-
-        this.moduleContext = RModuleContext(this)
-
+    init {
         Bukkit.getPluginManager().callEvent(RMatchLoadEvent(this))
         RPlayer.updateVisibility()
     }
 
-    public fun sendMessage(msg: String, f: (RPlayer) -> Boolean = { true }) {
-        Bukkit.getConsoleSender().sendMessage("[match-$id] $msg")
+    fun sendMessage(msg: String, f: (RPlayer) -> Boolean = { true }) {
+        RLogger.info("[match-$id] $msg")
         players.filter(f).forEach { it.sendMessage(RConfig.General.mainMessagePrefix + msg) }
     }
 
-    public fun sendPrefixlessMessage(msg: String, f: (RPlayer) -> Boolean = { true }) {
-        Bukkit.getConsoleSender().sendMessage("[match-$id] $msg")
+    fun sendPrefixlessMessage(msg: String, f: (RPlayer) -> Boolean = { true }) {
+        RLogger.info("[match-$id] $msg")
         players.filter(f).forEach { it.sendMessage(msg) }
     }
 
-    public fun sendTitle(title: String, subtitle: String, fadeIn: Int, stay: Int, fadeOut: Int, f: (RPlayer) -> Boolean = { true }) {
-        Bukkit.getConsoleSender().sendMessage("[match-$id] $title $subtitle")
+    fun sendTitle(title: String, subtitle: String, fadeIn: Int, stay: Int, fadeOut: Int, f: (RPlayer) -> Boolean = { true }) {
+        RLogger.info("[match-$id] $title $subtitle")
         players.filter(f).forEach { TitleUtil.sendTitle(it, title, subtitle, fadeIn, stay, fadeOut) }
     }
 
     /**
      * Begins the starting countdown for this match.
      */
-    public fun beginCountdown() {
+    fun beginCountdown() {
         assert(state == State.LOADED, { "Cannot begin countdown from state $state" })
         state = State.STARTING
         Renaissance.countdownManager.start(RMatchStartCountdown(this), RConfig.Match.countdownTime)
@@ -76,7 +65,7 @@ class RMatch {
     /**
      * Starts the match.
      */
-    public fun startMatch() {
+    fun startMatch() {
         state = State.PLAYING
 
         Bukkit.getPluginManager().callEvent(RMatchStartEvent(this))
@@ -87,9 +76,9 @@ class RMatch {
             if (alivePlayers.size == 1) {
                 announceWinner(alivePlayers[0])
             } else {
-                endMatch()
                 sendMessage("${ChatColor.RED}No players are playing! Ending the game.")
             }
+            endMatch()
         }
     }
 
@@ -97,33 +86,63 @@ class RMatch {
      * Sends map info to players
      */
     private fun sendMapInfo() {
+        // Name and version
         sendPrefixlessMessage(CommandUtils.formatHeader(ChatColor.GOLD.toString() + map.mapInfo.name + " " + ChatColor.GRAY.toString() + map.mapInfo.version, ChatColor.YELLOW))
+
+        // Objective
         sendPrefixlessMessage(ChatColor.YELLOW.toString() + map.mapInfo.objective)
-        sendPrefixlessMessage(ChatColor.YELLOW.toString() + "Author" + (if (map.mapInfo.authors.count() > 1) "s" else "") + ": " + map.mapInfo.authors.map { ChatColor.GOLD.toString() + it.name }.joinToString(", "))
-        if(map.mapInfo.contributors.count() > 0) sendPrefixlessMessage(ChatColor.YELLOW.toString() + "Contributor" + (if (map.mapInfo.contributors.count() > 1) "s" else "") + ": " + map.mapInfo.contributors.map { ChatColor.GOLD.toString() + it.name }.joinToString(", "))
-        sendPrefixlessMessage(CommandUtils.formatHeader(ChatColor.GOLD.toString() + "HungerStruck", ChatColor.YELLOW))
+
+        // Author(s)
+        sendPrefixlessMessage(ChatColor.YELLOW.toString() + "Author" +
+                (if (map.mapInfo.authors.count() > 1) {"s"} else {""}) + ": " +
+                map.mapInfo.authors.map { ChatColor.GOLD.toString() + it.name }.joinToString(", "))
+
+        // Contributors
+        if(map.mapInfo.contributors.count() > 0) {
+            sendPrefixlessMessage(ChatColor.YELLOW.toString() +
+                    "Contributor" + (if (map.mapInfo.contributors.count() > 1) {"s"} else {""}) + ": " +
+                    map.mapInfo.contributors.map { ChatColor.GOLD.toString() + it.name }.joinToString(", "))
+        }
     }
 
     /**
-     * Ends the match
+     * Ends the match, beginning the closing countdown
      */
-    public fun endMatch() {
+    fun endMatch(winner: RPlayer? = null) {
         state = State.ENDED
-        Bukkit.getPluginManager().callEvent(RMatchEndEvent(this, null))
-    }
 
-    public fun endMatch(winner: RPlayer) {
-        state = State.ENDED
+        if (winner != null) {
+            announceWinner(winner)
+        }
+
         Bukkit.getPluginManager().callEvent(RMatchEndEvent(this, winner))
+
+        Renaissance.countdownManager.start(RMatchEndCountdown(this), RConfig.Match.endCountdownTime)
     }
 
     /**
-     * Performs any unloading and cleanup that this map might want to do.
+     * Remove a match from memory, teleporting all participating players back to the lobby and unloading the match
      */
-    public fun cleanup() {
+    fun removeMatch() {
+        for (player : RPlayer in players) {
+            player.reset(true)
+            Renaissance.lobbyManager.defaultLobby.join(player)
+        }
+
+        // Perform any cleanup modules might want to do
         for (module in moduleContext.modules) {
             module.cleanup()
         }
+
+        // Update all the variables of the players
+        for (participant in players) {
+            participant.match = null
+            participant.previousState?.restore(participant)
+            participant.previousState = null
+        }
+
+        // Schedule a match deletion, as for some reason the World still thinks players are in it
+        RMatchDeletionRunnable(this).runTaskLater(Renaissance.plugin, 120L)
     }
 
     fun announceWinner(player: RPlayer) {
@@ -133,13 +152,11 @@ class RMatch {
         sendMessage("${ChatColor.DARK_PURPLE}${player.displayName}${ChatColor.WHITE} has won the game!")
         sendPrefixlessMessage("\n")
 
-        endMatch(player)
-
         if (player.isOnline) player.allowFlight = true
         RPlayer.updateVisibility()
     }
 
-    public enum class State {
+    enum class State {
         // Loaded. Players are not in already, they are still in the lobby for this match.
         LOADED,
         // Countdown for start is running, players are in.
@@ -149,4 +166,5 @@ class RMatch {
         // The match has ended but has not yet been unloaded. When unloaded, the RMatch gets gcd.
         ENDED;
     }
+
 }

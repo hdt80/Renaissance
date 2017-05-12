@@ -5,7 +5,7 @@ import org.bukkit.event.Event
 import org.bukkit.event.HandlerList
 
 /**
- * Created by molenzwiebel on 01-01-16.
+ * Occurs when a RLobby has ended, causing a match start
  */
 class RLobbyEndEvent(lobby: RLobby) : StruckLobbyEvent(lobby) {
 
