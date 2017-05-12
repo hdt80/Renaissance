@@ -6,7 +6,7 @@
 
     <groupId>net.hungerstruck</groupId>
     <artifactId>renaissance</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.1</version>
 
     <properties>
         <kotlin.version>1.0.3</kotlin.version>
@@ -17,12 +17,12 @@
 
     <repositories>
         <repository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
+            <id>spigot-repo</id>
+            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
         <repository>
-            <id>repo.oc.tc</id>
-            <url>http://repo.oc.tc/content/repositories/snapshots/</url>
+            <id>octc-repo</id>
+            <url>https://repo.extension.ws/content/repositories/snapshots/</url>
         </repository>
     </repositories>
 
@@ -32,22 +32,37 @@
             <artifactId>kotlin-stdlib</artifactId>
             <version>${kotlin.version}</version>
         </dependency>
-
         <dependency>
-            <groupId>co.enviark</groupId>
-            <artifactId>strukkit</artifactId>
-            <version>1.8.7-R0.1-SNAPSHOT</version>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-test</artifactId>
+            <version>${kotlin.version}</version>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
-            <groupId>com.sk89q</groupId>
-            <artifactId>command-framework-core</artifactId>
-            <version>0.6-SNAPSHOT</version>
+            <groupId>org.bukkit</groupId>
+            <artifactId>bukkit</artifactId>
+            <version>1.11.2-R0.1-SNAPSHOT</version>
+            <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot-api</artifactId>
+            <version>1.11.2-R0.1-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.bukkit</groupId>
+            <artifactId>craftbukkit</artifactId>
+            <scope>system</scope>
+            <version>1.11.2-R0.1-SNAPSHOT</version>
+            <systemPath>${project.basedir}/lib/craftbukkit-1.11.2.jar</systemPath>
+        </dependency>
+
         <dependency>
             <groupId>com.sk89q</groupId>
             <artifactId>command-framework-bukkit</artifactId>
-            <version>0.6-SNAPSHOT</version>
+            <version>1.9-SNAPSHOT</version>
         </dependency>
 
         <dependency>
@@ -56,15 +71,16 @@
             <version>1.9-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
+
         <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-test</artifactId>
-            <version>${kotlin.version}</version>
-            <scope>test</scope>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.5</version>
         </dependency>
     </dependencies>
 
     <build>
+        <sourceDirectory>src/main/kotlin</sourceDirectory>
         <defaultGoal>clean package</defaultGoal>
         <resources>
             <resource>
@@ -166,8 +182,6 @@
                                 <excludes>
                                     <exclude>org.bukkit:bukkit</exclude>
                                     <exclude>org.bukkit:craftbukkit</exclude>
-                                    <exclude>co.enviark:strukkit</exclude>
-                                    <exclude>co.enviark:strukkit-api</exclude>
                                     <exclude>me.anxuiz:settings</exclude>
                                     <exclude>me.anxuiz.settings:bukkit-settings</exclude>
                                 </excludes>

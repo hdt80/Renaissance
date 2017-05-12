@@ -175,7 +175,7 @@ class MapBuilder : AbstractMapBuilder<MapBuilder>() {
     class TNTSettings : BuilderPropertySet<TNTSettings>() {
         var blockDamage = false
         var instantIgnite = false
-        var yield = -1
+        var `yield` = -1    // The backticks are so it isn't interpreted as a keyword
         var damageUnderWater = false
     }
 

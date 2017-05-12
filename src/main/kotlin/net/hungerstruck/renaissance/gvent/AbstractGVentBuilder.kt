@@ -1,6 +1,7 @@
 package net.hungerstruck.renaissance.gvent
 
 import net.hungerstruck.renaissance.xml.module.RModule
+import java.util.*
 
 /**
  * Represents a property that is "settable" via the builder.
