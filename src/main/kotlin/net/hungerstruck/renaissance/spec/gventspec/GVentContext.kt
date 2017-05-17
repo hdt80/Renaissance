@@ -1,11 +1,10 @@
-package net.hungerstruck.renaissance.gvent
+package net.hungerstruck.renaissance.spec.gventspec
 
 import com.google.common.collect.ImmutableList
 import net.hungerstruck.renaissance.RLogger
 import net.hungerstruck.renaissance.config.RConfig
 import net.hungerstruck.renaissance.util.LiquidMetal
 import java.io.File
-
 
 class GVentContext {
     private val gvents: MutableMap<String, GVent> = hashMapOf()

@@ -3,8 +3,8 @@ package net.hungerstruck.renaissance.modules.ux
 import net.hungerstruck.renaissance.event.match.RMatchCountdownTickEvent
 import net.hungerstruck.renaissance.event.match.RMatchStartEvent
 import net.hungerstruck.renaissance.match.RMatch
-import net.hungerstruck.renaissance.xml.module.RModule
-import net.hungerstruck.renaissance.xml.module.RModuleContext
+import net.hungerstruck.renaissance.spec.module.RModule
+import net.hungerstruck.renaissance.spec.module.RModuleContext
 import org.bukkit.Sound
 import org.bukkit.event.EventHandler
 

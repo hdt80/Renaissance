@@ -1,4 +1,4 @@
-package net.hungerstruck.renaissance.xml.builder
+package net.hungerstruck.renaissance.spec
 
 @Target(AnnotationTarget.FIELD)
 @Retention(AnnotationRetention.RUNTIME)

@@ -1,6 +1,6 @@
-package net.hungerstruck.renaissance.gvent
+package net.hungerstruck.renaissance.spec.gventspec
 
-import net.hungerstruck.renaissance.xml.module.RModule
+import net.hungerstruck.renaissance.spec.module.RModule
 import java.util.*
 
 /**

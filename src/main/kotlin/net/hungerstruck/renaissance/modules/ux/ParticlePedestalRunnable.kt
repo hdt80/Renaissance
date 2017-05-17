@@ -11,6 +11,7 @@ class ParticlePedestalRunnable(private val module: PedestalModule, private val c
 
     override fun run() {
         return
+        /*
         // TODO: Fix me
         var firework = RFirework(3, fireworkEffect).play(module.pedestals[ped].loc.toLocation(module.match.world).add(0.0, 6.5, 0.0))
         Bukkit.getScheduler().scheduleSyncDelayedTask(Renaissance.plugin, { firework.detonate() }, 3)
@@ -25,5 +26,6 @@ class ParticlePedestalRunnable(private val module: PedestalModule, private val c
             fireworkEffect = RFirework.randomEffect
             if (!continuous) cancel()
         }
+        */
     }
 }

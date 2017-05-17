@@ -1,11 +1,9 @@
-package net.hungerstruck.renaissance.xml
+package net.hungerstruck.renaissance.spec.mapspec
 
 import com.google.common.collect.ImmutableList
-import net.hungerstruck.renaissance.RLogger
 import net.hungerstruck.renaissance.config.RConfig
 import net.hungerstruck.renaissance.util.LiquidMetal
 import java.io.File
-import java.util.logging.Logger
 
 class RMapContext {
     private val maps: MutableMap<String, RMap> = hashMapOf()

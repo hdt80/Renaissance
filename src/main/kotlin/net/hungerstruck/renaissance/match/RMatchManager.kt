@@ -1,19 +1,15 @@
 package net.hungerstruck.renaissance.match
 
 import net.hungerstruck.renaissance.RLogger
-import net.hungerstruck.renaissance.RPlayer
 import net.hungerstruck.renaissance.Renaissance
 import net.hungerstruck.renaissance.config.RConfig
 import net.hungerstruck.renaissance.rplayer
 import net.hungerstruck.renaissance.util.FileUtil
-import net.hungerstruck.renaissance.xml.RMap
-import net.minecraft.server.v1_11_R1.WorldServer
+import net.hungerstruck.renaissance.spec.mapspec.RMap
 import org.bukkit.Bukkit
 import org.bukkit.World
 import org.bukkit.WorldCreator
 import org.bukkit.craftbukkit.v1_11_R1.CraftWorld
-import org.bukkit.entity.HumanEntity
-import org.bukkit.entity.Player
 import java.io.File
 import java.util.*
 
@@ -62,7 +58,8 @@ class RMatchManager() {
                 RLogger.warn("${oldMatch.map.mapInfo.name} still has players in it. Forcing a unload")
 
                 for (player in oldMatch.world.players) {
-                    Renaissance.lobbyManager.defaultLobby.join(player.player.rplayer, true)
+                    Renaissance.lobbyManager.defaultLobby.join(player.rplayer, true)
+                    player.kickPlayer("You have not respawned so the game cannot exit")
                 }
             }
         }

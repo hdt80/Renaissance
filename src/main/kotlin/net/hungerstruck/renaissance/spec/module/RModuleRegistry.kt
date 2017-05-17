@@ -1,17 +1,14 @@
-package net.hungerstruck.renaissance.xml.module
+package net.hungerstruck.renaissance.spec.module
 
 import net.hungerstruck.renaissance.match.RMatch
 import java.lang.reflect.Constructor
 import kotlin.reflect.KClass
 
-/**
- * Created by molenzwiebel on 21-12-15.
- */
 class RModuleRegistry {
     companion object {
         val MODULES: MutableList<RModuleInfo> = arrayListOf()
 
-        public inline fun <reified T : RModule> register() {
+        inline fun <reified T : RModule> register() {
             MODULES.add(RModuleInfo.of(T::class))
         }
     }
@@ -25,7 +22,7 @@ data class RModuleInfo(val clazz: KClass<out RModule>, val dependencies: Array<R
     companion object {
         val INSTANCES: MutableMap<KClass<out RModule>, RModuleInfo> = hashMapOf()
 
-        public fun of(clazz: KClass<out RModule>): RModuleInfo {
+        fun of(clazz: KClass<out RModule>): RModuleInfo {
             if (INSTANCES[clazz] != null) return INSTANCES[clazz]!!
 
             val dependencies = clazz.java.annotations.filterIsInstance<Dependencies>().firstOrNull()?.value ?: arrayOf()

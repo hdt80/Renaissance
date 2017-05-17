@@ -5,8 +5,8 @@ import com.sk89q.minecraft.util.commands.CommandContext
 import com.sk89q.minecraft.util.commands.CommandException
 import net.hungerstruck.renaissance.Renaissance
 import net.hungerstruck.renaissance.rplayer
-import net.hungerstruck.renaissance.xml.RMap
-import net.hungerstruck.renaissance.xml.RMapInfo
+import net.hungerstruck.renaissance.spec.mapspec.RMap
+import net.hungerstruck.renaissance.spec.mapspec.RMapInfo
 import org.bukkit.ChatColor
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player

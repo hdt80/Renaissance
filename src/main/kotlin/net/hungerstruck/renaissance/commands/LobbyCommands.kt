@@ -3,7 +3,7 @@ package net.hungerstruck.renaissance.commands
 import com.sk89q.minecraft.util.commands.*
 import net.hungerstruck.renaissance.Renaissance
 import net.hungerstruck.renaissance.rplayer
-import net.hungerstruck.renaissance.xml.RMap
+import net.hungerstruck.renaissance.spec.mapspec.RMap
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 

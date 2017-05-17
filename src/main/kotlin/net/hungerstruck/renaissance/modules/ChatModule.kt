@@ -4,9 +4,9 @@ import net.hungerstruck.renaissance.RPlayer
 import net.hungerstruck.renaissance.config.RConfig
 import net.hungerstruck.renaissance.match.RMatch
 import net.hungerstruck.renaissance.rplayer
-import net.hungerstruck.renaissance.xml.module.Dependencies
-import net.hungerstruck.renaissance.xml.module.RModule
-import net.hungerstruck.renaissance.xml.module.RModuleContext
+import net.hungerstruck.renaissance.spec.module.Dependencies
+import net.hungerstruck.renaissance.spec.module.RModule
+import net.hungerstruck.renaissance.spec.module.RModuleContext
 import org.bukkit.ChatColor
 import org.bukkit.event.EventHandler
 import org.bukkit.event.player.AsyncPlayerChatEvent

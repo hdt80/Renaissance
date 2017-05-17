@@ -5,9 +5,9 @@ import net.hungerstruck.renaissance.event.match.RMatchLoadEvent
 import net.hungerstruck.renaissance.match.RMatch
 import net.hungerstruck.renaissance.modules.BoundaryModule
 import net.hungerstruck.renaissance.util.RandomCollection
-import net.hungerstruck.renaissance.xml.module.Dependencies
-import net.hungerstruck.renaissance.xml.module.RModule
-import net.hungerstruck.renaissance.xml.module.RModuleContext
+import net.hungerstruck.renaissance.spec.module.Dependencies
+import net.hungerstruck.renaissance.spec.module.RModule
+import net.hungerstruck.renaissance.spec.module.RModuleContext
 import net.minecraft.server.v1_11_R1.BlockPosition
 import net.minecraft.server.v1_11_R1.Blocks
 import net.minecraft.server.v1_11_R1.IBlockData

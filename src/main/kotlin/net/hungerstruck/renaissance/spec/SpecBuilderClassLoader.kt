@@ -1,11 +1,13 @@
-package net.hungerstruck.renaissance.gvent
+package net.hungerstruck.renaissance.spec
 
 import java.io.File
 import java.net.URLClassLoader
 
-class GVentBuilderClassLoader(path: File) : URLClassLoader(arrayOf(path.toURI().toURL())) {
+abstract class SpecBuilderClassLoader(path: File) : URLClassLoader(arrayOf(path.toURI().toURL())) {
+    abstract val className: String
+
     override fun loadClass(name: String, resolve: Boolean): Class<*>? {
-        if (name.startsWith("GVent")) {
+        if (name.startsWith(className)) {
             return super.findClass(name)
         }
 
@@ -15,7 +17,7 @@ class GVentBuilderClassLoader(path: File) : URLClassLoader(arrayOf(path.toURI().
     }
 
     override fun findClass(name: String): Class<*>? {
-        if (name.startsWith("GVent")) {
+        if (name.startsWith(className)) {
             return super.findClass(name)
         }
 

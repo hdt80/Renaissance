@@ -2,10 +2,9 @@ package net.hungerstruck.renaissance.commands
 
 import com.sk89q.minecraft.util.commands.*
 import net.hungerstruck.renaissance.Renaissance
-import net.hungerstruck.renaissance.gvent.GVent
 import net.hungerstruck.renaissance.match.RMatch
 import net.hungerstruck.renaissance.rplayer
-import net.hungerstruck.renaissance.xml.RMap
+import net.hungerstruck.renaissance.spec.gventspec.GVent
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 

@@ -1,7 +1,8 @@
-package net.hungerstruck.renaissance.gvent
+package net.hungerstruck.renaissance.spec.gventspec
 
 import net.hungerstruck.renaissance.match.RMatch
 import net.hungerstruck.renaissance.modules.region.*
+import net.hungerstruck.renaissance.spec.gventspec.AbstractGVentBuilder
 import org.bukkit.util.Vector
 
 class GVentBuilder : AbstractGVentBuilder<GVentBuilder>() {

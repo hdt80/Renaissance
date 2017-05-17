@@ -9,8 +9,8 @@ import net.hungerstruck.renaissance.event.match.RMatchEndEvent
 import net.hungerstruck.renaissance.event.match.RMatchLoadEvent
 import net.hungerstruck.renaissance.event.match.RMatchStartEvent
 import net.hungerstruck.renaissance.util.TitleUtil
-import net.hungerstruck.renaissance.xml.RMap
-import net.hungerstruck.renaissance.xml.module.RModuleContext
+import net.hungerstruck.renaissance.spec.mapspec.RMap
+import net.hungerstruck.renaissance.spec.module.RModuleContext
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.World

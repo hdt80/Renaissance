@@ -16,6 +16,8 @@ import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.FoodLevelChangeEvent
 import org.bukkit.event.entity.ItemSpawnEvent
 import org.bukkit.event.player.AsyncPlayerChatEvent
+import org.bukkit.event.player.PlayerKickEvent
+import org.bukkit.event.player.PlayerQuitEvent
 
 /**
  * As lobbies cannot contain modules (they are designed for matches), this listener handles block breaking, damage, etc.
@@ -35,6 +37,13 @@ class LobbyListener : Listener {
 
         lobby.sendPrefixlessMessage(RConfig.Lobby.chatFormat.format(event.player.name, event.message))
         event.isCancelled = true
+    }
+
+    @EventHandler
+    fun onPlayerLeave(event: PlayerKickEvent) {
+        val lobby = getLobby(event.player.world) ?: return
+
+        lobby.remove(event.player.rplayer)
     }
 
     // Cancel item drops if we don't allow breaking of blocks. Otherwise, go ahead.

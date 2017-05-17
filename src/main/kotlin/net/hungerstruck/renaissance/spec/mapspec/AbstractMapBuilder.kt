@@ -1,14 +1,13 @@
-package net.hungerstruck.renaissance.xml.builder
+package net.hungerstruck.renaissance.spec.mapspec
 
-import net.hungerstruck.renaissance.xml.module.RModule
-import java.util.*
+import net.hungerstruck.renaissance.spec.module.RModule
 
 /**
  * Represents a property that is "settable" via the builder.
  */
 data class BuildableProperty<out T>(
         val name: String,
-        val module: Class<out RModule>,
+        val module: Class<out net.hungerstruck.renaissance.spec.module.RModule>,
         val value: T
 )
 
@@ -57,7 +56,7 @@ abstract class SingleTypeListBuilder<T : SingleTypeListBuilder<T, B, A>, B, A>(v
         return values()
     }
 
-    fun values(): Collection<A> = ArrayList(values)
+    fun values(): Collection<A> = java.util.ArrayList(values)
 }
 
 /**

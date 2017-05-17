@@ -1,12 +1,10 @@
-package net.hungerstruck.renaissance.xml.builder
+package net.hungerstruck.renaissance.spec.mapspec
 
 import net.hungerstruck.renaissance.match.RMatch
 import net.hungerstruck.renaissance.modules.*
 import net.hungerstruck.renaissance.modules.region.*
+import net.hungerstruck.renaissance.spec.module.RModuleContext
 import net.hungerstruck.renaissance.util.RandomCollection
-import net.hungerstruck.renaissance.xml.Contributor
-import net.hungerstruck.renaissance.xml.RLobbyProperties
-import net.hungerstruck.renaissance.xml.module.RModuleContext
 import org.bukkit.Difficulty
 import org.bukkit.World
 import org.bukkit.inventory.ItemStack
@@ -15,6 +13,7 @@ import org.bukkit.util.Vector
 /**
  * Class that builds maps.
  */
+@Suppress("unused")
 class MapBuilder : AbstractMapBuilder<MapBuilder>() {
     class StringListBuilder : SingleTypeListBuilder<StringListBuilder, String, String>()
     class RegionListBuilder : SingleTypeListBuilder<RegionListBuilder, RRegion, RRegion>()
@@ -68,7 +67,7 @@ class MapBuilder : AbstractMapBuilder<MapBuilder>() {
     /**
      * Specifies boundary settings.
      */
-    fun boundary(x: BoundarySettings.() -> Unit)
+    fun boundary(x: MapBuilder.BoundarySettings.() -> Unit)
             = register<BoundaryModule>(BoundarySettings().build(x))
 
     class SpecCallback(val instance: MapBuilder) : BuilderPropertySet<SpecCallback>() {
@@ -92,14 +91,14 @@ class MapBuilder : AbstractMapBuilder<MapBuilder>() {
     /**
      * Specifies region event settings.
      */
-    fun callbacks(x: SpecCallback.() -> Unit)
+    fun callbacks(x: MapBuilder.SpecCallback.() -> Unit)
             = register<SpecCallbackModule>(SpecCallback(this).build(x))
 
     class ChestSettings(val instance: MapBuilder) : BuilderPropertySet<ChestSettings>() {
         var mode: ChestModule.Mode = ChestModule.Mode.AUTOMATIC
         var chests: MutableList<BlockRegion> = arrayListOf()
 
-        operator fun Vector.unaryMinus() {
+        operator fun org.bukkit.util.Vector.unaryMinus() {
             chests.add(BlockRegion(this))
         }
 
@@ -119,8 +118,8 @@ class MapBuilder : AbstractMapBuilder<MapBuilder>() {
     /**
      * Specifies chest settings.
      */
-    fun chests(x: ChestSettings.() -> Unit)
-            = register<ChestModule>(ChestSettings(this).build(x))
+    fun chests(x: MapBuilder.ChestSettings.() -> Unit)
+            = register<ChestModule>(MapBuilder.ChestSettings(this).build(x))
 
     class GameRuleSettings : BuilderPropertySet<GameRuleSettings>() {
         var rules: MutableList<Pair<String, Boolean>> = arrayListOf()
@@ -134,14 +133,14 @@ class MapBuilder : AbstractMapBuilder<MapBuilder>() {
     /**
      * Specifies gamerule settings.
      */
-    fun gamerules(x: GameRuleSettings.() -> Unit)
+    fun gamerules(x: MapBuilder.GameRuleSettings.() -> Unit)
             = register<GameRuleModule>(GameRuleSettings().build(x))
 
     /**
      * Specifies pedestal locations.
      */
-    fun pedestals(x: BlockRegionListBuilder.() -> Unit)
-            = register<PedestalModule>("pedestals", BlockRegionListBuilder().run(x))
+    fun pedestals(x: MapBuilder.BlockRegionListBuilder.() -> Unit)
+            = register<PedestalModule>("pedestals", MapBuilder.BlockRegionListBuilder().run(x))
 
     class SanitySettings : BuilderPropertySet<SanitySettings>() {
         var enabledCauses = listOf(SanityModule.Cause.HEIGHT, SanityModule.Cause.CAVE, SanityModule.Cause.LIGHT, SanityModule.Cause.RADIUS)
@@ -153,7 +152,7 @@ class MapBuilder : AbstractMapBuilder<MapBuilder>() {
     /**
      * Specifies sanity settings.
      */
-    fun sanity(x: SanitySettings.() -> Unit)
+    fun sanity(x: MapBuilder.SanitySettings.() -> Unit)
             = register<SanityModule>(SanitySettings().build(x))
 
     class ThirstSettings : BuilderPropertySet<ThirstSettings>() {
@@ -163,7 +162,7 @@ class MapBuilder : AbstractMapBuilder<MapBuilder>() {
     /**
      * Specifies thirst settings.
      */
-    fun thirst(x: ThirstSettings.() -> Unit)
+    fun thirst(x: MapBuilder.ThirstSettings.() -> Unit)
             = register<ThirstModule>(ThirstSettings().build(x))
 
 
@@ -182,13 +181,13 @@ class MapBuilder : AbstractMapBuilder<MapBuilder>() {
     /**
      * Specifies tnt settings.
      */
-    fun tnt(x: TNTSettings.() -> Unit)
+    fun tnt(x: MapBuilder.TNTSettings.() -> Unit)
             = register<TNTSettingsModule>(TNTSettings().build(x))
 
     /**
      * Specifies timelock settings.
      */
-    fun timelock(x: TimeLockSettings.() -> Unit)
+    fun timelock(x: MapBuilder.TimeLockSettings.() -> Unit)
             = register<TimeLockModule>(TimeLockSettings().build(x))
 
     class TimeSetSettings : BuilderPropertySet<TimeSetSettings>() {
@@ -198,7 +197,7 @@ class MapBuilder : AbstractMapBuilder<MapBuilder>() {
     /**
      * Specifies timeset settings.
      */
-    fun timeset(x: TimeSetSettings.() -> Unit)
+    fun timeset(x: MapBuilder.TimeSetSettings.() -> Unit)
             = register<TimeSetModule>(TimeSetSettings().build(x))
 
     /**
@@ -208,7 +207,7 @@ class MapBuilder : AbstractMapBuilder<MapBuilder>() {
      */
     fun block(location: Vector) = BlockRegion(location)
     fun circle(base: IntRange, radius: Int) = CircleRegion(base.first.toDouble(), base.last.toDouble(), radius)
-    fun cuboid(min: Vector, max: Vector) = CuboidRegion(min, max)
+    fun cuboid(min: org.bukkit.util.Vector, max: Vector) = CuboidRegion(min, max)
     fun cylinder(base: Vector, radius: Int, height: Int) = CylinderRegion(base, radius, height)
     fun rectangle(min: IntRange, max: IntRange) = RectangleRegion(Vector(min.first, 0, min.last), Vector(max.first, 0, max.last))
     fun sphere(center: Vector, radius: Int) = SphereRegion(center, radius)
@@ -222,8 +221,8 @@ class MapBuilder : AbstractMapBuilder<MapBuilder>() {
  * Implements a..b..c.
  * a..b is an IntRange, we then override IntRange..c.
  */
-operator fun IntRange.rangeTo(other: Int): Vector {
-    return Vector(first, last, other)
+operator fun IntRange.rangeTo(other: Int): org.bukkit.util.Vector {
+    return org.bukkit.util.Vector(first, last, other)
 }
 
 fun map(x: MapBuilder.() -> Unit): MapBuilder {

@@ -2,7 +2,6 @@ package net.hungerstruck.renaissance
 
 import net.hungerstruck.renaissance.config.RConfig
 import net.hungerstruck.renaissance.countdown.CountdownManager
-import net.hungerstruck.renaissance.gvent.GVentContext
 import net.hungerstruck.renaissance.listeners.ConnectionListener
 import net.hungerstruck.renaissance.listeners.LobbyListener
 import net.hungerstruck.renaissance.listeners.SimpleEventsListener
@@ -15,9 +14,10 @@ import net.hungerstruck.renaissance.modules.ux.BloodModule
 import net.hungerstruck.renaissance.modules.ux.ParticleModule
 import net.hungerstruck.renaissance.modules.ux.SoundModule
 import net.hungerstruck.renaissance.settings.Settings
+import net.hungerstruck.renaissance.spec.gventspec.GVentContext
 import net.hungerstruck.renaissance.util.ActionBarSender
-import net.hungerstruck.renaissance.xml.RMapContext
-import net.hungerstruck.renaissance.xml.module.RModuleRegistry
+import net.hungerstruck.renaissance.spec.mapspec.RMapContext
+import net.hungerstruck.renaissance.spec.module.RModuleRegistry
 import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
 import java.io.File

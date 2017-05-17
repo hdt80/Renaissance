@@ -1,21 +1,15 @@
-package net.hungerstruck.renaissance.xml.module
+package net.hungerstruck.renaissance.spec.module
 
 import net.hungerstruck.renaissance.match.RMatch
-import net.hungerstruck.renaissance.xml.builder.AbstractMapBuilder
-import net.hungerstruck.renaissance.xml.builder.MapBuilder
-import net.hungerstruck.renaissance.xml.builder.inject
+import net.hungerstruck.renaissance.spec.mapspec.AbstractMapBuilder
+import net.hungerstruck.renaissance.spec.mapspec.MapBuilder
+import net.hungerstruck.renaissance.spec.inject
 import kotlin.reflect.KClass
 
-/**
- * Created by molenzwiebel on 20-12-15.
- */
-class RModuleContext {
-    final val modules: MutableSet<RModule> = hashSetOf()
-    protected final val match: RMatch
+class RModuleContext(private val match: RMatch) {
+    val modules: MutableSet<RModule> = hashSetOf()
 
-    constructor(match: RMatch) {
-        this.match = match
-
+    init {
         for (info in RModuleRegistry.MODULES) {
             loadModule(info)
         }
@@ -37,7 +31,9 @@ class RModuleContext {
         if (hasModule(info.clazz)) return true
 
         for (dep in info.dependencies) {
-            if (!loadModule(dep)) return false
+            if (!loadModule(dep)) {
+                return false
+            }
         }
 
         val instance = info.constructor.newInstance(match, this)

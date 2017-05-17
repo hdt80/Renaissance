@@ -8,7 +8,7 @@ import net.hungerstruck.renaissance.config.RConfig
 import net.hungerstruck.renaissance.event.lobby.RLobbyEndEvent
 import net.hungerstruck.renaissance.event.player.RPlayerJoinMatchEvent
 import net.hungerstruck.renaissance.match.RMatch
-import net.hungerstruck.renaissance.xml.RMap
+import net.hungerstruck.renaissance.spec.mapspec.RMap
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.ChatColor.*
@@ -22,7 +22,6 @@ import org.bukkit.World
  * @param lobbyMap: RMap of the lobby
  */
 class RLobby(val lobbyWorld: World, val lobbyMap: RMap) {
-
     var nextMap: RMap? = null       // Loaded RMap the RLobby will send players to to start the match
     var match: RMatch? = null       // RMatch the players will be a part of
     var counting: Boolean = false   // If a countdown is currently happening
@@ -69,6 +68,17 @@ class RLobby(val lobbyWorld: World, val lobbyMap: RMap) {
                 RConfig.Lobby.autoStart && !counting && nextMap != null) {
 
             startCountdown()
+        }
+    }
+
+    /**
+     * Remove a RPlayer from a lobby. This will typically be because of leaving before a match starts
+     *
+     * @param player RPlayer that is being removed from a lobby.
+     */
+    fun remove(player: RPlayer) {
+        if (members.contains(player)) {
+            player.lobby = null
         }
     }
 

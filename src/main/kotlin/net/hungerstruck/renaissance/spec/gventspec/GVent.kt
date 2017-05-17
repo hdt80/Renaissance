@@ -1,4 +1,4 @@
-package net.hungerstruck.renaissance.gvent
+package net.hungerstruck.renaissance.spec.gventspec
 
 import java.io.File
 

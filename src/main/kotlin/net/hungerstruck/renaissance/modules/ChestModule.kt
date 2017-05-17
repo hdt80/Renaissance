@@ -8,9 +8,9 @@ import net.hungerstruck.renaissance.match.RMatch
 import net.hungerstruck.renaissance.modules.region.BlockRegion
 import net.hungerstruck.renaissance.times
 import net.hungerstruck.renaissance.util.RandomCollection
-import net.hungerstruck.renaissance.xml.builder.inject
-import net.hungerstruck.renaissance.xml.module.RModule
-import net.hungerstruck.renaissance.xml.module.RModuleContext
+import net.hungerstruck.renaissance.spec.inject
+import net.hungerstruck.renaissance.spec.module.RModule
+import net.hungerstruck.renaissance.spec.module.RModuleContext
 import org.bukkit.Bukkit
 import org.bukkit.Chunk
 import org.bukkit.Material
@@ -39,7 +39,7 @@ class ChestModule(match: RMatch, modCtx: RModuleContext) : RModule(match, modCtx
     @inject var mode: Mode = Mode.AUTOMATIC
 
     @inject var setupInitialItems: (RandomCollection<ItemStack>) -> Unit = {}
-    @inject var setupFeastItems: (RandomCollection<ItemStack>, Double) -> Unit = {x,y -> }
+    @inject var setupFeastItems: (RandomCollection<ItemStack>, Double) -> Unit = { x, y -> }
 
     override fun init() {
         setupItems()

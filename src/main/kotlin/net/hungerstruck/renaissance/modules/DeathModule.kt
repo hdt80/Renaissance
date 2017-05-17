@@ -4,9 +4,9 @@ import net.hungerstruck.renaissance.*
 import net.hungerstruck.renaissance.config.RConfig
 import net.hungerstruck.renaissance.event.player.RPlayerJoinMatchEvent
 import net.hungerstruck.renaissance.match.RMatch
-import net.hungerstruck.renaissance.xml.module.Dependencies
-import net.hungerstruck.renaissance.xml.module.RModule
-import net.hungerstruck.renaissance.xml.module.RModuleContext
+import net.hungerstruck.renaissance.spec.module.Dependencies
+import net.hungerstruck.renaissance.spec.module.RModule
+import net.hungerstruck.renaissance.spec.module.RModuleContext
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Material
@@ -58,7 +58,7 @@ class DeathModule(match: RMatch, modCtx: RModuleContext) : RModule(match, modCtx
         event.player.isCollidable = false
         event.player.allowFlight = true
         event.player.inventory.setItem(0, ItemStack(Material.COMPASS, 1))
-        event.player.teleport(match.world.spawnLocation.teleportable)
+        event.player.teleport(match.world.spawnLocation)
 
         RPlayer.updateVisibility()
     }
@@ -89,7 +89,9 @@ class DeathModule(match: RMatch, modCtx: RModuleContext) : RModule(match, modCtx
         } else {
             match.sendMessage(RConfig.Match.playerRemainMessage.replace("%0\$d", match.alivePlayers.size.toString()))
 
-            if(getModule<SanityModule>() != null && getModule<SanityModule>()!!.radiusDecrease > 0) match.sendMessage(RConfig.Match.radiusShrinkMessage)
+            if (getModule<SanityModule>() != null && getModule<SanityModule>()!!.radiusDecrease > 0) {
+                match.sendMessage(RConfig.Match.radiusShrinkMessage)
+            }
         }
 
         match.world.strikeLightningEffect(victim.location)

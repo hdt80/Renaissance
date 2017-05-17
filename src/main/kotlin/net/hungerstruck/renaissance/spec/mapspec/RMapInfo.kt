@@ -1,7 +1,6 @@
-package net.hungerstruck.renaissance.xml
+package net.hungerstruck.renaissance.spec.mapspec
 
 import org.bukkit.Difficulty
-import org.bukkit.Location
 import org.bukkit.World
 import org.bukkit.util.Vector
 

@@ -1,9 +1,9 @@
 package net.hungerstruck.renaissance.modules
 
 import net.hungerstruck.renaissance.match.RMatch
-import net.hungerstruck.renaissance.xml.builder.inject
-import net.hungerstruck.renaissance.xml.module.RModule
-import net.hungerstruck.renaissance.xml.module.RModuleContext
+import net.hungerstruck.renaissance.spec.inject
+import net.hungerstruck.renaissance.spec.module.RModule
+import net.hungerstruck.renaissance.spec.module.RModuleContext
 
 /**
  * Created by molenzwiebel on 21-12-15.

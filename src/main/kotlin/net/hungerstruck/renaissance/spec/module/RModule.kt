@@ -1,4 +1,4 @@
-package net.hungerstruck.renaissance.xml.module
+package net.hungerstruck.renaissance.spec.module
 
 import net.hungerstruck.renaissance.RPlayer
 import net.hungerstruck.renaissance.Renaissance
@@ -12,23 +12,12 @@ import org.bukkit.entity.Player
 import org.bukkit.event.HandlerList
 import org.bukkit.event.Listener
 
-/**
- * Base class for modules.
- *
- * Created by molenzwiebel on 21-12-15.
- */
-abstract class RModule : Listener {
-    final val match: RMatch
-    final var moduleContext: RModuleContext
+abstract class RModule(val match: RMatch, modCtx: RModuleContext) : Listener {
+    var moduleContext: RModuleContext = modCtx
 
     private val listeners: MutableList<Listener> = arrayListOf()
 
     abstract fun init()
-
-    constructor(match: RMatch, modCtx: RModuleContext) {
-        this.match = match
-        this.moduleContext = modCtx
-    }
 
     protected inline fun <reified T : RModule> getModule(): T? {
         return moduleContext.getModule<T>()

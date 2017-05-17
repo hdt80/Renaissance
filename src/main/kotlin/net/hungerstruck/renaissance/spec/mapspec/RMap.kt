@@ -1,7 +1,5 @@
-package net.hungerstruck.renaissance.xml
+package net.hungerstruck.renaissance.spec.mapspec
 
-import net.hungerstruck.renaissance.xml.builder.MapBuilder
-import net.hungerstruck.renaissance.xml.builder.MapBuilderClassLoader
 import java.io.File
 
 /**
@@ -12,7 +10,7 @@ class RMap(loc: File) {
     var mapBuilder: MapBuilder
     var mapInfo: RMapInfo
 
-    val location: File = loc
+    val location: java.io.File = loc
     val isLobby: Boolean
         get() = this.mapInfo.lobbyProperties != null
 
