@@ -1,5 +1,6 @@
 package net.hungerstruck.renaissance.util
 
+import net.hungerstruck.renaissance.RLogger
 import net.hungerstruck.renaissance.modules.region.*
 import org.bukkit.util.NumberConversions
 import org.bukkit.util.Vector
@@ -27,12 +28,18 @@ object MapUtil {
             return listOf(region.loc)
         } else if (region is CircleRegion) {
             val ret = arrayListOf<Vector>()
-            for (x in (region.baseX - region.radius).toInt()..(region.baseX + region.radius).toInt())
-                for (z in (region.baseZ - region.radius).toInt()..(region.baseZ + region.radius).toInt())
-                    if (Math.pow(x - region.baseX, 2.0) + Math.pow(z - region.baseZ, 2.0) < region.radius * region.radius)
-                        for (y in minY..maxY)
+            for (x in (region.baseX - region.radius).toInt()..(region.baseX + region.radius).toInt()) {
+                for (z in (region.baseZ - region.radius).toInt()..(region.baseZ + region.radius).toInt()) {
+                    if (Math.pow(x - region.baseX, 2.0) + Math.pow(z - region.baseZ, 2.0) <= region.radius * region.radius) {
+                        for (y in minY..maxY) {
                             ret.add(Vector(x, y, z))
+                        }
+                    }
+                }
+            }
+
             return ret
+
         } else if (region is CuboidRegion) {
             val ret = arrayListOf<Vector>()
             for (x in region.min.x.toInt()..region.max.x.toInt())
@@ -65,7 +72,6 @@ object MapUtil {
                         }
             return ret
         }
-
 
         return arrayListOf()
     }

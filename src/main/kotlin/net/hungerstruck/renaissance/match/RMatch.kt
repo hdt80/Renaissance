@@ -14,6 +14,7 @@ import net.hungerstruck.renaissance.spec.module.RModuleContext
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.World
+import java.security.SecureRandom
 
 /**
  * Represents a match

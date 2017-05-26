@@ -118,7 +118,7 @@ class ChestModule(match: RMatch, modCtx: RModuleContext) : RModule(match, modCtx
         if (processedChests.contains(loc)) {
             // Bukkit.getLogger().warning("Attempted to fill chest at " + loc + " twice, skipping")
             // TODO: The error above this line is silenced because all chests are added twice to avoid an error.
-            return;
+            return
         }
         val block = loc.loc.toLocation(match.world).block
 

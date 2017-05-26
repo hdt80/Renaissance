@@ -2,11 +2,13 @@ package net.hungerstruck.renaissance.commands
 
 import com.sk89q.minecraft.util.commands.*
 import net.hungerstruck.renaissance.Renaissance
+import net.hungerstruck.renaissance.config.RConfig
 import net.hungerstruck.renaissance.match.RMatch
 import net.hungerstruck.renaissance.rplayer
 import net.hungerstruck.renaissance.spec.gventspec.GVent
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
+import java.io.File
 
 object GVentCommands {
     @JvmStatic
@@ -68,6 +70,20 @@ object GVentCommands {
 
             gvent.gventBuilder.executeFun(player.rplayer.match!!)
 
+        }
+
+        @JvmStatic
+        @Command(
+                aliases = arrayOf("reload", "rl"),
+                desc = "Reload the loaded GVents",
+                usage = "",
+                min = 0,
+                max = 0
+        )
+        fun reload(args: CommandContext, sender: CommandSender) {
+            Renaissance.gventContext.unloadGVents()
+            Renaissance.gventContext.loadGVents(File(RConfig.GVents.gventDir))
+            sender.sendMessage("Reloaded GVents")
         }
 
     }

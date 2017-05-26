@@ -15,6 +15,8 @@ class GVentContext {
     fun loadGVents(directory: File) {
         if (!directory.exists() || !directory.isDirectory) throw IllegalArgumentException("Illegal gvent path: ${directory.absolutePath}")
 
+        RLogger.debug("===== Loading GVents =====")
+
         for (f in directory.listFiles()) {
             if (!f.isDirectory) continue
 
@@ -25,6 +27,10 @@ class GVentContext {
                 RLogger.debug("Loaded gvent: ${gvent.gventInfo.name}")
             }
         }
+    }
+
+    fun unloadGVents() {
+        gvents.clear()
     }
 
     fun matchMap(query: String): GVent? {

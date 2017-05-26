@@ -24,6 +24,9 @@ class MapBuilder : AbstractMapBuilder<MapBuilder>() {
     lateinit var version: String
     lateinit var objective: String
 
+    var center: Vector = Vector(0, 0, 0)
+    var region: RectangleRegion = RectangleRegion(center, center)
+
     var lobby: String? = null
     var lobbyProperties: RLobbyProperties? = null
     fun lobby(f: RLobbyProperties.() -> Unit) {
@@ -172,7 +175,7 @@ class MapBuilder : AbstractMapBuilder<MapBuilder>() {
 
 
     class TNTSettings : BuilderPropertySet<TNTSettings>() {
-        var blockDamage = false
+        var blockDamage = true
         var instantIgnite = false
         var `yield` = -1    // The backticks are so it isn't interpreted as a keyword
         var damageUnderWater = false

@@ -1,6 +1,7 @@
 package net.hungerstruck.renaissance.spec.mapspec
 
 import java.io.File
+import java.security.SecureRandom
 
 /**
  * Represents a map.
@@ -36,18 +37,20 @@ class RMap(loc: File) {
     }
 
     private fun loadMapInfo(): RMapInfo {
-        val name = mapBuilder.name
-        val version = mapBuilder.version
-        val objective = mapBuilder.objective
-        val authors = mapBuilder.authors
-        val contributors = mapBuilder.contributors
-        val rules = mapBuilder.rules
-        val difficulty = mapBuilder.difficulty
-        val dimension = mapBuilder.dimension
-        val lobby = mapBuilder.lobby
-        val lobbyProperties = mapBuilder.lobbyProperties
-
-        return RMapInfo(name, version, lobby, lobbyProperties, objective, authors, contributors, rules, difficulty, dimension)
+        return RMapInfo(
+                name = mapBuilder.name,
+                version = mapBuilder.version,
+                objective = mapBuilder.objective,
+                authors = mapBuilder.authors,
+                contributors = mapBuilder.contributors,
+                rules = mapBuilder.rules,
+                difficulty = mapBuilder.difficulty,
+                dimension = mapBuilder.dimension,
+                lobby = mapBuilder.lobby,
+                lobbyProperties = mapBuilder.lobbyProperties,
+                region = mapBuilder.region,
+                center = mapBuilder.center
+        )
     }
 
 }

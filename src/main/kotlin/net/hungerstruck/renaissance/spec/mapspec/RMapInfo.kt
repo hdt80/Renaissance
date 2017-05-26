@@ -1,5 +1,6 @@
 package net.hungerstruck.renaissance.spec.mapspec
 
+import net.hungerstruck.renaissance.modules.region.RRegion
 import org.bukkit.Difficulty
 import org.bukkit.World
 import org.bukkit.util.Vector
@@ -10,6 +11,8 @@ import org.bukkit.util.Vector
 data class RMapInfo(
         val name: String,
         val version: String,
+        val region: RRegion,
+        val center: Vector,
         val lobby: String?,
         val lobbyProperties: RLobbyProperties?,
         val objective: String,
